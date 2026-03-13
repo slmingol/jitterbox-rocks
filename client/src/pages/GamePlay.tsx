@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import { gameApi, statsApi } from '../services/api';
@@ -29,6 +29,47 @@ const GamePlay: React.FC = () => {
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
+  // Refs for keyboard handler to access current state without re-creating the listener
+  const stateRef = useRef({
+    game,
+    user,
+    currentQuestionIndex,
+    selectedOption,
+    showResult,
+    userAnswer,
+    suggestions,
+    showSuggestions,
+    selectedSuggestionIndex,
+    score,
+    correctAnswers,
+    questionStartTime
+  });
+
+  // Refs for handler functions
+  const handlersRef = useRef({
+    handleSubmitAnswer: () => {},
+    handleSkipQuestion: () => {},
+    handleNextQuestion: () => {}
+  });
+
+  // Keep stateRef in sync with current state
+  useEffect(() => {
+    stateRef.current = {
+      game,
+      user,
+      currentQuestionIndex,
+      selectedOption,
+      showResult,
+      userAnswer,
+      suggestions,
+      showSuggestions,
+      selectedSuggestionIndex,
+      score,
+      correctAnswers,
+      questionStartTime
+    };
+  }, [game, user, currentQuestionIndex, selectedOption, showResult, userAnswer, suggestions, showSuggestions, selectedSuggestionIndex, score, correctAnswers, questionStartTime]);
+
   useEffect(() => {
     if (gameId) {
       loadGame();
@@ -55,6 +96,8 @@ const GamePlay: React.FC = () => {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
+      const { game, user, currentQuestionIndex, selectedOption, showResult, userAnswer, suggestions, showSuggestions, selectedSuggestionIndex } = stateRef.current;
+      
       if (!game || !user) return;
 
       const currentQuestion = game.questions[currentQuestionIndex];
@@ -106,7 +149,7 @@ const GamePlay: React.FC = () => {
       // "I Don't Know" key: Skip question (Escape or S key)
       if ((e.key === 'Escape' || e.key.toLowerCase() === 's') && !showResult) {
         e.preventDefault();
-        handleSkipQuestion();
+        handlersRef.current.handleSkipQuestion();
         return;
       }
 
@@ -114,9 +157,9 @@ const GamePlay: React.FC = () => {
       if (e.key === 'Enter') {
         e.preventDefault();
         if (showResult) {
-          handleNextQuestion();
+          handlersRef.current.handleNextQuestion();
         } else {
-          handleSubmitAnswer();
+          handlersRef.current.handleSubmitAnswer();
         }
         return;
       }
@@ -151,7 +194,7 @@ const GamePlay: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [game, user, currentQuestionIndex, selectedOption, showResult, userAnswer, score, correctAnswers, suggestions, showSuggestions, selectedSuggestionIndex]);
+  }, []); // Empty deps - using stateRef to access current values
 
   // Fetch autocomplete suggestions
   const fetchAutocompleteSuggestions = async (query: string, questionText: string) => {
@@ -282,6 +325,15 @@ const GamePlay: React.FC = () => {
       completeGame();
     }
   };
+
+  // Update handler refs for keyboard shortcuts
+  useEffect(() => {
+    handlersRef.current = {
+      handleSubmitAnswer,
+      handleSkipQuestion,
+      handleNextQuestion
+    };
+  }, [handleSubmitAnswer, handleSkipQuestion, handleNextQuestion]);
 
   const completeGame = async () => {
     if (!game || !user) return;
