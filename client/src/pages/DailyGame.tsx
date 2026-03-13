@@ -3,12 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { gameApi } from '../services/api';
 import { Game } from '../types';
 import { format } from 'date-fns';
+import { useTheme } from '../context/ThemeContext';
 
 const DailyGame: React.FC = () => {
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { resolvedTheme } = useTheme();
+
+  const isDark = resolvedTheme === 'dark';
+  
+  // Theme-aware colors
+  const cardBg = isDark ? '#2a2a3e' : '#f8f9ff';
+  const textSecondary = isDark ? '#b4b4c8' : '#666';
 
   useEffect(() => {
     loadDailyGame();
@@ -61,36 +69,36 @@ const DailyGame: React.FC = () => {
       <div className="card">
         <div className="card-header">
           <h1 className="card-title">🎯 Daily Challenge</h1>
-          <p style={{ color: '#666', fontSize: '1.1rem' }}>
+          <p style={{ color: textSecondary, fontSize: '1.1rem' }}>
             {format(new Date(game.date), 'EEEE, MMMM d, yyyy')}
           </p>
         </div>
 
         <div style={{ marginBottom: '2rem' }}>
           <h2 style={{ color: '#667eea', marginBottom: '0.5rem' }}>{game.title}</h2>
-          <p style={{ color: '#666', fontSize: '1.1rem' }}>{game.description}</p>
+          <p style={{ color: textSecondary, fontSize: '1.1rem' }}>{game.description}</p>
         </div>
 
         <div className="stats-grid" style={{ marginBottom: '2rem' }}>
-          <div style={{ background: '#f8f9ff', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
+          <div style={{ background: cardBg, padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#667eea' }}>
               {game.questions.length}
             </div>
-            <div style={{ color: '#666' }}>Questions</div>
+            <div style={{ color: textSecondary }}>Questions</div>
           </div>
 
-          <div style={{ background: '#f8f9ff', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
+          <div style={{ background: cardBg, padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#764ba2' }}>
               {game.questions.reduce((sum, q) => sum + q.points, 0)}
             </div>
-            <div style={{ color: '#666' }}>Total Points</div>
+            <div style={{ color: textSecondary }}>Total Points</div>
           </div>
 
-          <div style={{ background: '#f8f9ff', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
+          <div style={{ background: cardBg, padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#667eea' }}>
               ⏰
             </div>
-            <div style={{ color: '#666' }}>No Time Limit</div>
+            <div style={{ color: textSecondary }}>No Time Limit</div>
           </div>
         </div>
 
@@ -115,7 +123,7 @@ const DailyGame: React.FC = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 padding: '0.75rem',
-                background: '#f8f9ff',
+                background: cardBg,
                 borderRadius: '8px',
               }}
             >
