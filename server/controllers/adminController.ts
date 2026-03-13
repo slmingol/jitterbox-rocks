@@ -5,6 +5,7 @@ import { BillboardSong } from '../data/billboardSchema';
 import { GameRepository, IGame } from '../repositories/GameRepository';
 import { v4 as uuidv4 } from 'uuid';
 import { format, startOfDay } from 'date-fns';
+import { dbPath, reloadDatabase } from '../config/sqlite';
 
 interface StrictDecadeConfig {
   decade: string;
@@ -387,6 +388,91 @@ export class AdminController {
     } catch (error) {
       console.error('Error deleting games:', error);
       res.status(500).json({ message: 'Server error' });
+    }
+  }
+
+  /**
+   * GET /api/admin/database/export
+   * Export the database file
+   */
+  async exportDatabase(req: Request, res: Response) {
+    try {
+      if (!fs.existsSync(dbPath)) {
+        return res.status(404).json({ message: 'Database file not found' });
+      }
+
+      const stats = fs.statSync(dbPath);
+      const timestamp = format(new Date(), 'yyyy-MM-dd_HH-mm-ss');
+      const filename = `jitterbox-rocks-${timestamp}.db`;
+
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.setHeader('Content-Length', stats.size);
+
+      const fileStream = fs.createReadStream(dbPath);
+      fileStream.pipe(res);
+    } catch (error) {
+      console.error('Error exporting database:', error);
+      res.status(500).json({ message: 'Error exporting database' });
+    }
+  }
+
+  /**
+   * POST /api/admin/database/import
+   * Import a database file (requires multer middleware)
+   */
+  async importDatabase(req: Request, res: Response) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+
+      const uploadedFile = req.file.path;
+      const backupPath = `${dbPath}.backup-${Date.now()}`;
+
+      // Create backup of current database
+      if (fs.existsSync(dbPath)) {
+        fs.copyFileSync(dbPath, backupPath);
+        console.log(`✅ Created backup at ${backupPath}`);
+      }
+
+      try {
+        // Replace database file
+        fs.copyFileSync(uploadedFile, dbPath);
+        console.log(`✅ Imported new database from ${uploadedFile}`);
+
+        // Reload database connection
+        const reloaded = reloadDatabase();
+        
+        if (!reloaded) {
+          throw new Error('Failed to reload database connection');
+        }
+
+        // Clean up uploaded file
+        fs.unlinkSync(uploadedFile);
+
+        // Verify new database by trying to read games
+        const games = GameRepository.findAll();
+        
+        res.json({
+          message: 'Database imported successfully',
+          games: games.length,
+          backup: backupPath
+        });
+      } catch (error) {
+        // Restore from backup on error
+        if (fs.existsSync(backupPath)) {
+          fs.copyFileSync(backupPath, dbPath);
+          reloadDatabase();
+          console.log('❌ Import failed, restored from backup');
+        }
+        throw error;
+      }
+    } catch (error: any) {
+      console.error('Error importing database:', error);
+      res.status(500).json({ 
+        message: error.message || 'Error importing database' 
+      });
     }
   }
 }

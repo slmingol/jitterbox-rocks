@@ -23,6 +23,7 @@ const AdminPanel: React.FC = () => {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [generateCount, setGenerateCount] = useState<Record<string, number>>({});
+  const [importing, setImporting] = useState(false);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || (
     process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000'
@@ -125,6 +126,75 @@ const AdminPanel: React.FC = () => {
     }
   };
 
+  const handleExportDatabase = async () => {
+    try {
+      setMessage(null);
+      const response = await fetch(`${API_BASE_URL}/api/admin/database/export`);
+      
+      if (!response.ok) {
+        throw new Error('Export failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `jitterbox-rocks-${new Date().toISOString().split('T')[0]}.db`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      setMessage({ type: 'success', text: 'Database exported successfully' });
+    } catch (error) {
+      console.error('Error exporting database:', error);
+      setMessage({ type: 'error', text: 'Failed to export database' });
+    }
+  };
+
+  const handleImportDatabase = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.db')) {
+      setMessage({ type: 'error', text: 'Please select a .db file' });
+      return;
+    }
+
+    if (!window.confirm('Importing a database will replace all current data. Continue?')) {
+      return;
+    }
+
+    setImporting(true);
+    setMessage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('database', file);
+
+      const response = await fetch(`${API_BASE_URL}/api/admin/database/import`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: `${data.message} (${data.games} games loaded)` });
+        await loadData(); // Reload stats
+      } else {
+        setMessage({ type: 'error', text: data.message || 'Import failed' });
+      }
+    } catch (error) {
+      console.error('Error importing database:', error);
+      setMessage({ type: 'error', text: 'Failed to import database' });
+    } finally {
+      setImporting(false);
+      // Reset file input
+      event.target.value = '';
+    }
+  };
+
   if (loading && !stats) {
     return (
       <div style={{ padding: '2rem', textAlign: 'center' }}>
@@ -196,6 +266,89 @@ const AdminPanel: React.FC = () => {
           </div>
         </div>
       )}
+
+      <div style={{
+        background: 'var(--card-bg)',
+        borderRadius: '12px',
+        padding: '1.25rem',
+        boxShadow: 'var(--card-shadow)',
+        border: '1px solid var(--border-color)',
+        marginBottom: '1.5rem'
+      }}>
+        <div style={{ marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: 'var(--text-primary)', fontWeight: '600' }}>
+            Database Management
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.813rem' }}>
+            Export or import database files
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <button
+            onClick={handleExportDatabase}
+            disabled={importing}
+            style={{
+              padding: '0.625rem 1.25rem',
+              borderRadius: '6px',
+              border: 'none',
+              background: 'var(--primary-color)',
+              color: 'white',
+              fontWeight: '600',
+              fontSize: '0.875rem',
+              cursor: importing ? 'not-allowed' : 'pointer',
+              opacity: importing ? 0.5 : 1,
+              transition: 'all 0.15s'
+            }}
+            onMouseEnter={(e) => {
+              if (!importing) {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            📥 Export Database
+          </button>
+
+          <label style={{
+            padding: '0.625rem 1.25rem',
+            borderRadius: '6px',
+            border: '1px solid var(--primary-color)',
+            background: 'transparent',
+            color: 'var(--primary-color)',
+            fontWeight: '600',
+            fontSize: '0.875rem',
+            cursor: importing ? 'not-allowed' : 'pointer',
+            opacity: importing ? 0.5 : 1,
+            transition: 'all 0.15s',
+            display: 'inline-block'
+          }}
+          onMouseEnter={(e) => {
+            if (!importing) {
+              e.currentTarget.style.background = 'var(--primary-color)';
+              e.currentTarget.style.color = 'white';
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.color = 'var(--primary-color)';
+          }}
+          >
+            {importing ? '⏳ Importing...' : '📤 Import Database'}
+            <input
+              type="file"
+              accept=".db"
+              onChange={handleImportDatabase}
+              disabled={importing}
+              style={{ display: 'none' }}
+            />
+          </label>
+        </div>
+      </div>
 
       <div style={{
         background: 'var(--card-bg)',

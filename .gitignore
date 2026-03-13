@@ -3,12 +3,15 @@ dist/
 .env
 .DS_Store
 client/build/
-uploads/
+uploads/*
+!uploads/temp/
+!uploads/temp/.gitkeep
 *.log
 
 # Database
 data/*.db
 data/*.db-journal
+data/*.db-backup-*
 
 # Kaggle API credentials
 kaggle.json

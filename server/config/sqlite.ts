@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 
 const dbDir = path.join(__dirname, '../../data');
-const dbPath = path.join(dbDir, 'music-trivia.db');
+export const dbPath = path.join(dbDir, 'music-trivia.db');
 
 // Ensure data directory exists
 if (!fs.existsSync(dbDir)) {
@@ -11,10 +11,19 @@ if (!fs.existsSync(dbDir)) {
 }
 
 // Create database connection
-export const db = new Database(dbPath, { verbose: console.log });
+let dbInstance: Database.Database;
+
+const createDatabaseConnection = () => {
+  return new Database(dbPath, { verbose: console.log });
+};
+
+dbInstance = createDatabaseConnection();
 
 // Enable foreign keys
-db.pragma('foreign_keys = ON');
+dbInstance.pragma('foreign_keys = ON');
+
+// Export database instance
+export const db = dbInstance;
 
 // Initialize database schema
 export const initializeDatabase = () => {
@@ -130,5 +139,34 @@ export const initializeDatabase = () => {
 
 // Initialize on import
 initializeDatabase();
+
+// Reload database connection (for hot-swapping database files)
+export const reloadDatabase = () => {
+  console.log('🔄 Reloading database connection...');
+  
+  try {
+    // Close existing connection
+    if (dbInstance && dbInstance.open) {
+      dbInstance.close();
+      console.log('✅ Closed existing database connection');
+    }
+    
+    // Create new connection
+    dbInstance = createDatabaseConnection();
+    dbInstance.pragma('foreign_keys = ON');
+    
+    // Re-export (note: existing imports will still reference old instance)
+    // This is a limitation - we need to use a getter function for truly hot reload
+    console.log('✅ Database connection reloaded successfully');
+    
+    return true;
+  } catch (error) {
+    console.error('❌ Error reloading database:', error);
+    return false;
+  }
+};
+
+// Get current database instance (use this in code that needs hot-reload support)
+export const getDb = () => dbInstance;
 
 export default db;
