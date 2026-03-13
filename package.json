@@ -1,6 +1,6 @@
 {
   "name": "jitterbox-rocks",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A comprehensive music trivia game with daily challenges and practice mode",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,11 @@
     "collect-data": "ts-node server/scripts/collectAllData.ts",
     "start": "node dist/server/index.js"
   },
-  "keywords": ["music", "trivia", "game"],
+  "keywords": [
+    "music",
+    "trivia",
+    "game"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
