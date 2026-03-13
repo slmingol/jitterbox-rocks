@@ -73,7 +73,7 @@ I've successfully built a comprehensive music trivia game with all the requested
 ## 📁 Project Structure
 
 ```
-music-trivia-game/
+jitterbox-rocks/
 ├── server/                 # Backend API
 │   ├── models/            # Database schemas
 │   │   ├── Game.ts        # Game & Question models
@@ -152,7 +152,7 @@ The system comes with 25 unique games covering diverse music genres:
 
 ```bash
 # Navigate to project
-cd ~/dev/projects/music-trivia-game
+cd ~/dev/projects/jitterbox-rocks
 
 # Option 1: Automated setup
 ./setup.sh
@@ -294,7 +294,7 @@ The system is designed to be easily extendable:
 
 The project is complete and ready to use. Simply follow the setup guide, seed the database, and start playing!
 
-**Project Location**: `~/dev/projects/music-trivia-game`
+**Project Location**: `~/dev/projects/jitterbox-rocks`
 
 **Next Steps**:
 1. Start MongoDB

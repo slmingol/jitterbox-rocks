@@ -37,7 +37,7 @@ Before you begin, make sure you have installed:
 
 ```bash
 # Navigate to the project directory
-cd music-trivia-game
+cd jitterbox-rocks
 
 # Make setup script executable
 chmod +x setup.sh
@@ -113,7 +113,7 @@ npm run dev
 ## 📁 Project Structure
 
 ```
-music-trivia-game/
+jitterbox-rocks/
 ├── server/                 # Backend (Node.js/Express/TypeScript)
 │   ├── config/            # Database configuration
 │   ├── models/            # Mongoose models (Game, UserStats)

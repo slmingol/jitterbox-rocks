@@ -12,7 +12,7 @@ This guide shows how to download Kaggle Billboard datasets using a Docker contai
 4. **Save** the downloaded `kaggle.json` file to this project directory:
 
 ```bash
-cd /Users/smingolelli/dev/projects/music-trivia-game
+cd /Users/smingolelli/dev/projects/jitterbox-rocks
 # Move the downloaded file here
 mv ~/Downloads/kaggle.json .
 ```
@@ -30,7 +30,7 @@ Your `kaggle.json` should look like:
 **Option A: Using docker-compose (Recommended)**
 
 ```bash
-cd /Users/smingolelli/dev/projects/music-trivia-game
+cd /Users/smingolelli/dev/projects/jitterbox-rocks
 
 # Build the Kaggle downloader container
 docker compose -f docker-compose.kaggle.yml build

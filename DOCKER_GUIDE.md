@@ -200,7 +200,7 @@ docker compose ps mongodb
 docker compose logs mongodb
 
 # Verify network
-docker network inspect music-trivia-game_music-trivia-network
+docker network inspect jitterbox-rocks_jitterbox-rocks-network
 ```
 
 ### Clear Everything and Start Fresh

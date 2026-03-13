@@ -52,12 +52,12 @@ The version is automatically picked up from `package.json` by:
 Docker images are automatically tagged with the version:
 
 **Production:**
-- `music-trivia-game-backend:1.0.0`
-- `music-trivia-game-frontend:1.0.0`
+- `jitterbox-rocks-backend:1.0.0`
+- `jitterbox-rocks-frontend:1.0.0`
 
 **Development:**
-- `music-trivia-game-backend:1.0.0-dev`
-- `music-trivia-game-frontend:1.0.0-dev`
+- `jitterbox-rocks-backend:1.0.0-dev`
+- `jitterbox-rocks-frontend:1.0.0-dev`
 
 ### 4. Override Version (Optional)
 

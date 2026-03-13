@@ -86,7 +86,7 @@ Choose production mode (1) for optimized builds or development mode (2) for hot 
 ## Project Structure
 
 ```
-music-trivia-game/
+jitterbox-rocks/
 ├── server/              # Backend code
 │   ├── models/         # Database models
 │   ├── routes/         # API routes

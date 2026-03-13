@@ -58,7 +58,7 @@ The system creates these diverse question formats:
 The system includes 15 sample songs. You can test immediately:
 
 ```bash
-cd /Users/smingolelli/dev/projects/music-trivia-game
+cd /Users/smingolelli/dev/projects/jitterbox-rocks
 
 # Edit generateBillboardGames.ts and change 10000 to 15
 # Then run:

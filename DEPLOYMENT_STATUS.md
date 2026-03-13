@@ -121,8 +121,8 @@ Semantic versioning is fully integrated across the entire stack:
    - Styling: `rgba(128, 128, 128, 0.5)`, monospace font
 4. **Docker**:
    - Images tagged with version number
-   - `music-trivia-game-backend:1.0.0`
-   - `music-trivia-game-frontend:1.0.0`
+   - `jitterbox-rocks-backend:1.0.0`
+   - `jitterbox-rocks-frontend:1.0.0`
 
 ### Version Display
 
@@ -144,8 +144,8 @@ Services:
   - frontend: Port 3000 (React/Nginx)
 
 Images:
-  - music-trivia-game-backend:1.0.0
-  - music-trivia-game-frontend:1.0.0
+   - jitterbox-rocks-backend:1.0.0
+   - jitterbox-rocks-frontend:1.0.0
 
 Volumes:
   - ./data:/app/data (SQLite database persistence)
@@ -155,7 +155,7 @@ Volumes:
 
 ```bash
 # Start application
-cd ~/dev/projects/music-trivia-game
+cd ~/dev/projects/jitterbox-rocks
 VERSION=1.0.0 docker compose up -d
 
 # View logs
@@ -248,12 +248,12 @@ docker compose exec backend npm run seed
 
 ```bash
 # Terminal 1 - Backend
-cd ~/dev/projects/music-trivia-game
+cd ~/dev/projects/jitterbox-rocks
 npm install
 npm run server
 
 # Terminal 2 - Frontend
-cd ~/dev/projects/music-trivia-game/client
+cd ~/dev/projects/jitterbox-rocks/client
 npm install
 npm start
 ```
@@ -264,7 +264,7 @@ Frontend: http://localhost:3000
 ### Development with Docker
 
 ```bash
-cd ~/dev/projects/music-trivia-game
+cd ~/dev/projects/jitterbox-rocks
 VERSION=1.0.0-dev docker compose -f docker-compose.dev.yml up
 ```
 
@@ -278,7 +278,7 @@ This enables:
 ## 📁 Project Structure
 
 ```
-music-trivia-game/
+jitterbox-rocks/
 ├── client/                    # React frontend
 │   ├── src/
 │   │   ├── components/        # React components
