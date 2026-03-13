@@ -1,0 +1,46 @@
+name: Container Registry Janitor
+
+on:
+  schedule:
+    # Run weekly on Sundays at 2 AM UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+
+jobs:
+  cleanup-old-images:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      
+    strategy:
+      matrix:
+        image: [backend, frontend]
+    
+    steps:
+      - name: Delete old container images
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'roadie-rumble-${{ matrix.image }}'
+          package-type: 'container'
+          min-versions-to-keep: 5
+          delete-only-untagged-versions: true
+          
+  cleanup-old-tagged-images:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      
+    strategy:
+      matrix:
+        image: [backend, frontend]
+    
+    steps:
+      - name: Delete old tagged versions (keep last 10)
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'roadie-rumble-${{ matrix.image }}'
+          package-type: 'container'
+          min-versions-to-keep: 10
+          oldest-first: true
+          # Only delete versions older than 30 days
+          ignore-versions: '^(latest|main|v\\d+\\.\\d+\\.\\d+)$'

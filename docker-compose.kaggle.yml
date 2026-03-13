@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   kaggle-downloader:
     build:
       context: .
       dockerfile: Dockerfile.kaggle
-    container_name: music-trivia-kaggle-downloader
+    container_name: roadie-rumble-kaggle-downloader
     volumes:
       # Mount local data directory
       - ./server/data/json:/data

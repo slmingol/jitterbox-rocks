@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Backend API Service
   backend:
@@ -17,7 +15,6 @@ services:
     volumes:
       - ./data:/app/data  # SQLite database file
       - ./uploads:/app/uploads
-      - ./server:/app/server
     networks:
       - roadie-rumble-network
     healthcheck:
