@@ -115,3 +115,11 @@ Each game consists of 10 questions with three types:
 - Upload audio files
 - Edit existing questions
 - View game statistics
+
+## Data Attribution
+
+This project uses the **Billboard The Hot 100 Songs** dataset from Kaggle:
+
+📊 [Billboard The Hot 100 Songs Dataset](https://www.kaggle.com/datasets/dhruvildave/billboard-the-hot-100-songs)
+
+The dataset contains historical Billboard Hot 100 chart data used to generate music trivia questions. All credit for the data compilation goes to the original dataset author.
