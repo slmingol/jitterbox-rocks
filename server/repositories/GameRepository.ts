@@ -1,4 +1,4 @@
-import db from '../config/sqlite';
+import { getDb } from '../config/sqlite';
 
 export interface IQuestion {
   type: 'multiple-choice' | 'audio' | 'text-input';
@@ -24,7 +24,7 @@ export interface IGame {
 export class GameRepository {
   // Create a new game
   static create(game: IGame): IGame {
-    const insert = db.prepare(`
+    const insert = getDb().prepare(`
       INSERT INTO games (game_id, title, description, date, is_daily, theme)
       VALUES (?, ?, ?, ?, ?, ?)
     `);
@@ -39,7 +39,7 @@ export class GameRepository {
     );
     
     // Insert questions
-    const insertQuestion = db.prepare(`
+    const insertQuestion = getDb().prepare(`
       INSERT INTO questions (game_id, question_index, type, question, category, difficulty, points, correct_answer, options, audio_url)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
@@ -64,13 +64,13 @@ export class GameRepository {
 
   // Find game by gameId
   static findByGameId(gameId: string): IGame | null {
-    const game = db.prepare(`
+    const game = getDb().prepare(`
       SELECT * FROM games WHERE game_id = ?
     `).get(gameId) as any;
     
     if (!game) return null;
     
-    const questions = db.prepare(`
+    const questions = getDb().prepare(`
       SELECT * FROM questions WHERE game_id = ? ORDER BY question_index
     `).all(gameId) as any[];
     
@@ -96,7 +96,7 @@ export class GameRepository {
 
   // Find game by date
   static findByDate(date: string): IGame | null {
-    const game = db.prepare(`
+    const game = getDb().prepare(`
       SELECT * FROM games WHERE date = ? AND is_daily = 1
     `).get(date) as any;
     
@@ -107,7 +107,7 @@ export class GameRepository {
 
   // Get all games
   static findAll(): IGame[] {
-    const games = db.prepare(`
+    const games = getDb().prepare(`
       SELECT * FROM games ORDER BY date DESC
     `).all() as any[];
     
@@ -116,7 +116,7 @@ export class GameRepository {
 
   // Get random game
   static findRandom(): IGame | null {
-    const game = db.prepare(`
+    const game = getDb().prepare(`
       SELECT * FROM games ORDER BY RANDOM() LIMIT 1
     `).get() as any;
     
@@ -127,14 +127,14 @@ export class GameRepository {
 
   // Delete all games (for testing/seeding)
   static deleteAll(): void {
-    db.prepare('DELETE FROM questions').run();
-    db.prepare('DELETE FROM games').run();
+    getDb().prepare('DELETE FROM questions').run();
+    getDb().prepare('DELETE FROM games').run();
   }
 
   // Delete a specific game by gameId
   static delete(gameId: string): void {
-    db.prepare('DELETE FROM questions WHERE game_id = ?').run(gameId);
-    db.prepare('DELETE FROM games WHERE game_id = ?').run(gameId);
+    getDb().prepare('DELETE FROM questions WHERE game_id = ?').run(gameId);
+    getDb().prepare('DELETE FROM games WHERE game_id = ?').run(gameId);
   }
 
   // Delete all games for a specific theme
@@ -146,13 +146,13 @@ export class GameRepository {
 
   // Count games
   static count(): number {
-    const result = db.prepare('SELECT COUNT(*) as count FROM games').get() as { count: number };
+    const result = getDb().prepare('SELECT COUNT(*) as count FROM games').get() as { count: number };
     return result.count;
   }
 
   // Get games by theme
   static findByTheme(theme: string): IGame[] {
-    const games = db.prepare(`
+    const games = getDb().prepare(`
       SELECT * FROM games WHERE theme = ? ORDER BY date DESC
     `).all(theme) as any[];
     
@@ -161,7 +161,7 @@ export class GameRepository {
 
   // Get all distinct themes
   static getAllThemes(): string[] {
-    const themes = db.prepare(`
+    const themes = getDb().prepare(`
       SELECT DISTINCT theme FROM games ORDER BY theme
     `).all() as { theme: string }[];
     
