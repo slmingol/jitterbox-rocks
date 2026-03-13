@@ -13,8 +13,8 @@
 - **Frontend**: React 18.2 + TypeScript 4.9 + React Router 6 + date-fns
 - **Backend**: Node.js + Express 4 + TypeScript 5.2 + better-sqlite3
 - **Build Tools**: react-scripts 5.0.1, ts-node, nodemon, concurrently
-- **Deployment**: Docker (multi-stage builds), Nginx (production frontend), GitHub Container Registry
-- **CI/CD**: GitHub Actions (version bumping, Docker builds, image cleanup)
+- **Deployment**: Podman (Docker-compatible, multi-stage builds), Nginx (production frontend), GitHub Container Registry
+- **CI/CD**: GitHub Actions (version bumping, container builds, image cleanup)
 
 ## Build & Development Commands
 
@@ -63,25 +63,25 @@ npm run client                 # Starts React dev server on :3000
 - **Migration**: Database schema is initialized in `server/config/sqlite.ts` on startup
 - **Backup**: Admin panel has export/import functionality (100MB file upload limit)
 
-### Docker Commands
+### Podman Commands
 
 **Production** (Recommended for testing deployments):
 ```bash
 ./docker-start.sh              # Interactive menu, choose option 1 for production
 # OR manually:
-docker compose up --build -d   # Builds images, starts containers
-docker compose logs -f         # View logs
-docker compose down            # Stop and remove containers
+podman compose up --build -d   # Builds images, starts containers
+podman compose logs -f         # View logs
+podman compose down            # Stop and remove containers
 ```
 
 **Development** (Hot reload):
 ```bash
 ./docker-start.sh              # Choose option 2 for development mode
 # OR manually:
-docker compose -f docker-compose.dev.yml up --build -d
+podman compose -f docker-compose.dev.yml up --build -d
 ```
 
-**IMPORTANT Docker Notes**:
+**IMPORTANT Podman Notes**:
 - Production uses `docker-compose.yml` (optimized builds, Nginx serves frontend)
 - Development uses `docker-compose.dev.yml` (volume mounts, dev servers)
 - ARM builds only run for version tags (v*) to speed up CI - regular commits build amd64 only
@@ -212,7 +212,7 @@ Before pushing changes, ALWAYS:
 1. **Run build**: `cd client && npm run build` (should complete without errors in ~60s)
 2. **Test backend**: `npm run server` (should start on :5000, check `/api/health`)
 3. **Test frontend**: `npm run client` (should start on :3000, loads without console errors)
-4. **Check Docker**: `docker compose up --build` (both containers should start and be healthy)
+4. **Check Podman**: `podman compose up --build` (both containers should start and be healthy)
 5. **Verify version commit**: Use proper prefix (feat:, fix:, etc.) for automatic version bumping
 
 ## Trust These Instructions
@@ -227,9 +227,9 @@ These instructions have been validated by running commands in fresh environments
 
 **Start Development**: `npm run dev` (both servers)  
 **Build Production**: `cd client && npm run build`  
-**Docker Production**: `./docker-start.sh` → option 1  
-**Docker Dev**: `./docker-start.sh` → option 2  
+**Podman Production**: `./docker-start.sh` → option 1  
+**Podman Dev**: `./docker-start.sh` → option 2  
 **Backend Port**: 5000  
 **Frontend Port**: 3000 (dev), 5432 (production Docker)  
 **Database**: SQLite at `data/music-trivia.db`  
-**Logs**: `docker compose logs -f` or check terminal for dev servers
+**Logs**: `podman compose logs -f` or check terminal for dev servers
