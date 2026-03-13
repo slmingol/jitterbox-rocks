@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" alt="Jitterbox Rocks Logo" width="300"/>
+  <img src="logo.png" alt="Jitterbox Rocks Logo" width="600"/>
 </p>
 
 # Jitterbox Rocks
