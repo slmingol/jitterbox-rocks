@@ -201,9 +201,9 @@ podman compose -f docker-compose.dev.yml up --build -d
 2. No migration system - database is recreated on first run or can be exported/imported
 
 ### Docker Changes
-1. **Backend**: Edit `Dockerfile.backend`, rebuild with `docker compose build backend`
-2. **Frontend**: Edit `Dockerfile.frontend`, rebuild with `docker compose build frontend`
-3. **Always test locally before pushing**: `docker compose up --build`
+1. **Backend**: Edit `Dockerfile.backend`, rebuild with `podman compose build backend`
+2. **Frontend**: Edit `Dockerfile.frontend`, rebuild with `podman compose build frontend`
+3. **Always test locally before pushing**: `podman compose up --build`
 
 ## Validation Steps
 
