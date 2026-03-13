@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Example Song Title",
+    "artist": "Artist Name",
+    "peakPosition": 1,
+    "weeksOnChart": 20,
+    "chartDate": "2020-01-15",
+    "year": 2020,
+    "album": "Album Name",
+    "recordLabel": "Record Label",
+    "producers": ["Producer Name"],
+    "writers": ["Songwriter Name"],
+    "genre": ["Pop", "Rock"],
+    "facts": [
+      "Interesting fact about this song",
+      "Another fascinating detail"
+    ],
+    "grammy": true,
+    "platinumStatus": "Platinum",
+    "duration": 240,
+    "key": "A Major",
+    "tempo": 120,
+    "consecutiveWeeksAtOne": 4,
+    "yearEndPosition": 1
+  }
+]

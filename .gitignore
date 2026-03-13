@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.DS_Store
+client/build/
+uploads/
+*.log
+
+# Database
+data/*.db
+data/*.db-journal
+
+# Kaggle API credentials
+kaggle.json

@@ -1,0 +1,14 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY client/package*.json ./
+RUN npm install
+
+# Copy client code
+COPY client ./
+
+EXPOSE 3000
+
+CMD ["npm", "start"]

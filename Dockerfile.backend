@@ -1,0 +1,28 @@
+FROM node:18-alpine
+
+# Install build dependencies for better-sqlite3
+RUN apk add --no-cache --update python3 make g++ || \
+    apk add --no-cache build-base python3
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY tsconfig.server.json ./
+COPY nodemon.json ./
+
+# Install dependencies
+RUN npm install --build-from-source
+
+# Copy server code
+COPY server ./server
+
+# Create data directory for SQLite
+RUN mkdir -p /app/data
+
+# Expose port
+EXPOSE 5000
+
+# Start command
+CMD ["npm", "run", "server"]

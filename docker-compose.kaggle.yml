@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  kaggle-downloader:
+    build:
+      context: .
+      dockerfile: Dockerfile.kaggle
+    container_name: music-trivia-kaggle-downloader
+    volumes:
+      # Mount local data directory
+      - ./server/data/json:/data
+      # Mount Kaggle credentials (you'll create this)
+      - ./kaggle.json:/root/.kaggle/kaggle.json:ro
+    environment:
+      - KAGGLE_USERNAME=${KAGGLE_USERNAME:-}
+      - KAGGLE_KEY=${KAGGLE_KEY:-}
+    # Run the download script
+    command: bash /data/download_kaggle_data.sh

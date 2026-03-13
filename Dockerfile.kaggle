@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+# Install Kaggle CLI and utilities
+RUN pip install --no-cache-dir kaggle pandas
+
+# Install csvtojson for conversion
+RUN apt-get update && \
+    apt-get install -y curl unzip && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g csvtojson && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /data
+
+# Copy conversion script
+COPY scripts/convert_kaggle_to_json.py /scripts/convert.py
+
+# Make directory for Kaggle credentials
+RUN mkdir -p /root/.kaggle
+
+CMD ["/bin/bash"]
