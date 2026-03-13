@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" alt="Jitterbox Rocks Logo" width="200"/>
+</p>
+
 # Jitterbox Rocks
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/slmingol/jitterbox-rocks)
