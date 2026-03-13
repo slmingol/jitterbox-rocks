@@ -108,7 +108,7 @@ const Statistics: React.FC = () => {
               key={difficulty}
               style={{
                 padding: '1rem',
-                background: '#f8f9ff',
+                background: 'var(--bg-secondary)',
                 borderRadius: '8px',
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -122,11 +122,11 @@ const Statistics: React.FC = () => {
                 >
                   {difficulty}
                 </span>
-                <span style={{ color: '#666' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>
                   {data.correct} / {data.attempted} correct
                 </span>
               </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#667eea' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>
                 {data.accuracy.toFixed(1)}%
               </div>
             </div>
@@ -143,7 +143,7 @@ const Statistics: React.FC = () => {
               key={type}
               style={{
                 padding: '1rem',
-                background: '#f8f9ff',
+                background: 'var(--bg-secondary)',
                 borderRadius: '8px',
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -154,11 +154,11 @@ const Statistics: React.FC = () => {
                 <strong style={{ textTransform: 'capitalize', marginRight: '1rem' }}>
                   {type.replace('-', ' ')}
                 </strong>
-                <span style={{ color: '#666' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>
                   {data.correct} / {data.attempted} correct
                 </span>
               </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#764ba2' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>
                 {data.accuracy.toFixed(1)}%
               </div>
             </div>
@@ -177,7 +177,7 @@ const Statistics: React.FC = () => {
                 key={category}
                 style={{
                   padding: '0.75rem 1rem',
-                  background: '#f8f9ff',
+                  background: 'var(--bg-secondary)',
                   borderRadius: '8px',
                   display: 'flex',
                   justifyContent: 'space-between',
@@ -186,11 +186,11 @@ const Statistics: React.FC = () => {
               >
                 <div>
                   <strong>{category}</strong>
-                  <span style={{ color: '#666', marginLeft: '1rem', fontSize: '0.9rem' }}>
+                  <span style={{ color: 'var(--text-secondary)', marginLeft: '1rem', fontSize: '0.9rem' }}>
                     ({data.correct}/{data.attempted})
                   </span>
                 </div>
-                <div style={{ fontWeight: 'bold', color: '#667eea' }}>
+                <div style={{ fontWeight: 'bold', color: 'var(--primary-color)' }}>
                   {data.accuracy.toFixed(1)}%
                 </div>
               </div>
@@ -212,7 +212,7 @@ const Statistics: React.FC = () => {
                 key={index}
                 style={{
                   padding: '1rem',
-                  background: '#f8f9ff',
+                  background: 'var(--bg-secondary)',
                   borderRadius: '8px',
                   display: 'grid',
                   gridTemplateColumns: '1fr auto auto auto',
@@ -221,28 +221,28 @@ const Statistics: React.FC = () => {
                 }}
               >
                 <div>
-                  <div style={{ fontWeight: 'bold', color: '#333' }}>
+                  <div style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     {format(new Date(game.completedAt), 'MMM d, yyyy')}
                   </div>
-                  <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                     {format(new Date(game.completedAt), 'h:mm a')}
                   </div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontWeight: 'bold', color: '#667eea' }}>{game.score}</div>
-                  <div style={{ fontSize: '0.9rem', color: '#666' }}>points</div>
+                  <div style={{ fontWeight: 'bold', color: 'var(--primary-color)' }}>{game.score}</div>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>points</div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontWeight: 'bold', color: accuracy >= 70 ? '#28a745' : '#dc3545' }}>
+                  <div style={{ fontWeight: 'bold', color: accuracy >= 70 ? '#22c55e' : '#ef4444' }}>
                     {accuracy.toFixed(0)}%
                   </div>
-                  <div style={{ fontSize: '0.9rem', color: '#666' }}>accuracy</div>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>accuracy</div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontWeight: 'bold', color: '#764ba2' }}>
+                  <div style={{ fontWeight: 'bold', color: 'var(--primary-color)' }}>
                     {minutes}:{seconds.toString().padStart(2, '0')}
                   </div>
-                  <div style={{ fontSize: '0.9rem', color: '#666' }}>time</div>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>time</div>
                 </div>
               </div>
             );

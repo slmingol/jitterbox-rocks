@@ -20,7 +20,7 @@ jobs:
       - name: Delete old container images
         uses: actions/delete-package-versions@v5
         with:
-          package-name: 'roadie-rumble-${{ matrix.image }}'
+          package-name: 'jitterbox-rocks-${{ matrix.image }}'
           package-type: 'container'
           min-versions-to-keep: 5
           delete-only-untagged-versions: true
@@ -38,7 +38,7 @@ jobs:
       - name: Delete old tagged versions (keep last 10)
         uses: actions/delete-package-versions@v5
         with:
-          package-name: 'roadie-rumble-${{ matrix.image }}'
+          package-name: 'jitterbox-rocks-${{ matrix.image }}'
           package-type: 'container'
           min-versions-to-keep: 10
           oldest-first: true

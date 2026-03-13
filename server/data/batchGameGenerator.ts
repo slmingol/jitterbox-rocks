@@ -44,19 +44,30 @@ export class BatchGameGenerator {
     if (questions.length < 10) {
       console.warn(`Game ${gameNumber} only generated ${questions.length} questions`);
       // Pad with simpler questions if needed
-      while (questions.length < 10) {
+      let attempts = 0;
+      const maxAttempts = 50; // Prevent infinite loops
+      while (questions.length < 10 && attempts < maxAttempts) {
         const randomSong = gameSongs[questions.length % gameSongs.length];
         const simpleQ = this.questionGenerator.generateArtistTextQuestion(randomSong);
-        if (simpleQ) questions.push(simpleQ);
+        if (simpleQ) {
+          questions.push(simpleQ);
+        }
+        attempts++;
+      }
+      
+      if (questions.length < 10) {
+        console.error(`Game ${gameNumber} could not generate 10 questions after ${maxAttempts} attempts. Using ${questions.length} questions.`);
       }
     }
 
     const title = this.generateGameTitle(gameSongs, theme, gameNumber);
+    const description = this.generateGameDescription(gameSongs, theme, gameNumber);
     
     return {
       gameId: uuidv4(),
       date: format(startOfDay(date), 'yyyy-MM-dd'),
       title,
+      description,
       questions: questions.slice(0, 10),
       isDaily,
       theme
@@ -189,6 +200,74 @@ export class BatchGameGenerator {
     // This ensures variety while being reproducible
     const templateIndex = gameNumber % titleTemplates.length;
     return titleTemplates[templateIndex];
+  }
+
+  /**
+   * Generate a unique description for the game
+   */
+  private generateGameDescription(songs: BillboardSong[], theme: GameTheme = 'mixed', gameNumber: number = 0): string {
+    const years = songs.map(s => s.year);
+    const minYear = Math.min(...years);
+    const maxYear = Math.max(...years);
+    const decade = Math.floor(minYear / 10) * 10;
+    
+    // Extract unique artists
+    const artists = songs.map(s => s.artist);
+    const uniqueArtists = [...new Set(artists)];
+    const artistCount = uniqueArtists.length;
+    
+    // Get some featured artists for descriptions
+    const featuredArtists = uniqueArtists.slice(0, 3);
+    
+    // Description templates with variations
+    const descriptionTemplates = [
+      // Decade-focused
+      `Test your knowledge of ${decade}s music with 10 questions spanning the greatest hits of the decade.`,
+      `A journey through ${decade}s chart-toppers featuring ${artistCount} different artists.`,
+      `Relive the magic of the ${decade}s with trivia about legendary songs and artists.`,
+      `Can you identify these iconic ${decade}s hits? Put your music knowledge to the test!`,
+      `Explore the sounds that defined the ${decade}s in this challenging music quiz.`,
+      
+      // Year range focused
+      `Travel through ${maxYear - minYear} years of music history from ${minYear} to ${maxYear}.`,
+      `Discover hits from ${minYear} to ${maxYear} featuring diverse artists and genres.`,
+      `A musical time capsule featuring songs from ${minYear}-${maxYear}.`,
+      
+      // Artist-focused
+      `Featuring ${artistCount} unique artists including ${featuredArtists.slice(0, 2).join(' and ')}.`,
+      `Challenge yourself with songs from ${featuredArtists[0]}, ${featuredArtists[1]}, and ${artistCount - 2} more artists.`,
+      artistCount <= 5 ? `An intimate collection featuring ${uniqueArtists.join(', ')}.` : `A diverse mix of ${artistCount} artists from different eras.`,
+      
+      // General engaging descriptions
+      `10 questions to test your Billboard Hot 100 knowledge across multiple decades.`,
+      `Can you name these chart-topping hits? A diverse music challenge awaits!`,
+      `From one-hit wonders to legendary icons, how well do you know these songs?`,
+      `Test your music IQ with this carefully curated selection of Billboard classics.`,
+      `A mix of easy and challenging questions about some of music's biggest hits.`,
+      `How many of these chart-toppers can you identify? Find out now!`,
+      `Put your musical knowledge to the ultimate test with this trivia challenge.`,
+      `From rock to pop, R&B to country - a diverse musical journey awaits.`,
+      `Think you know your music history? Prove it with this engaging quiz!`,
+      `Challenge yourself with questions about songs that dominated the airwaves.`,
+      
+      // Theme-specific
+      ...(theme !== 'mixed' ? [
+        `An exclusive ${theme} collection featuring the era's most memorable songs.`,
+        `Deep dive into ${theme} music with questions about artists, songs, and history.`,
+        `Everything you need to know about ${theme} hits in one comprehensive quiz.`,
+      ] : []),
+      
+      // Interactive/engaging
+      `Name the artist, remember the year, and prove your musical expertise!`,
+      `From chart debuts to career-defining hits, test your comprehensive music knowledge.`,
+      `Multiple question types including artist identification, year guessing, and song recognition.`,
+      `Easy warm-ups to challenging brain-teasers - something for every music fan.`,
+      `Discover forgotten gems and revisit timeless classics in this musical adventure.`,
+    ];
+    
+    // Use game number to deterministically pick a template
+    const templateIndex = gameNumber % descriptionTemplates.length;
+    return descriptionTemplates[templateIndex];
   }
 
   /**

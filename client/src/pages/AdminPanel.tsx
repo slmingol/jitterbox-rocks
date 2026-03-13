@@ -1,343 +1,362 @@
-import React, { useState } from 'react';
-import { gameApi } from '../services/api';
-import { Question } from '../types';
+import React, { useState, useEffect } from 'react';
+
+interface DecadeInfo {
+  decade: string;
+  categoryName: string;
+  yearRange: string;
+  availableSongs: number;
+  existingGames: number;
+  canGenerate: boolean;
+}
+
+interface Stats {
+  totalGames: number;
+  totalQuestions: number;
+  gamesByDecade: Array<{ decade: string; count: number }>;
+}
 
 const AdminPanel: React.FC = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [isDaily, setIsDaily] = useState(false);
-  const [date, setDate] = useState('');
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [currentQuestion, setCurrentQuestion] = useState<Partial<Question>>({
-    type: 'multiple-choice',
-    difficulty: 'medium',
-    points: 15,
-  });
+  const [decades, setDecades] = useState<DecadeInfo[]>([]);
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [generating, setGenerating] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [generateCount, setGenerateCount] = useState<Record<string, number>>({});
 
-  const handleAddQuestion = () => {
-    if (!currentQuestion.question || !currentQuestion.correctAnswer || !currentQuestion.category) {
-      alert('Please fill in all required fields');
-      return;
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || (
+    process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000'
+  );
+
+  useEffect(() => {
+    loadData();
+    // eslint-disable-next-line
+  }, []);
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [decadesRes, statsRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/api/admin/decades`),
+        fetch(`${API_BASE_URL}/api/admin/stats`)
+      ]);
+
+      if (decadesRes.ok && statsRes.ok) {
+        const decadesData = await decadesRes.json();
+        const statsData = await statsRes.json();
+        setDecades(decadesData);
+        setStats(statsData);
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
+      setMessage({ type: 'error', text: 'Failed to load data' });
+    } finally {
+      setLoading(false);
     }
-
-    if (currentQuestion.type === 'multiple-choice' && (!currentQuestion.options || currentQuestion.options.length < 2)) {
-      alert('Multiple choice questions need at least 2 options');
-      return;
-    }
-
-    setQuestions([...questions, currentQuestion as Question]);
-    setCurrentQuestion({
-      type: 'multiple-choice',
-      difficulty: 'medium',
-      points: 15,
-    });
   };
 
-  const handleRemoveQuestion = (index: number) => {
-    setQuestions(questions.filter((_, i) => i !== index));
-  };
-
-  const handleSubmitGame = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (questions.length !== 10) {
-      alert('A game must have exactly 10 questions');
-      return;
-    }
+  const handleGenerate = async (decade: string) => {
+    const inputCount = generateCount[decade];
+    const count = Math.min(Math.max(parseInt(String(inputCount)) || 10, 1), 100);
+    setGenerating(decade);
+    setMessage(null);
 
     try {
-      await gameApi.createGame({
-        title,
-        description,
-        questions,
-        isDaily,
-        date: date ? new Date(date) : undefined,
+      const response = await fetch(`${API_BASE_URL}/api/admin/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decade, count })
       });
 
-      alert('Game created successfully!');
-      
-      // Reset form
-      setTitle('');
-      setDescription('');
-      setIsDaily(false);
-      setDate('');
-      setQuestions([]);
-    } catch (error: any) {
-      alert(`Error creating game: ${error.response?.data?.message || error.message}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: data.message });
+        await loadData();
+      } else {
+        setMessage({ type: 'error', text: data.message || 'Generation failed' });
+      }
+    } catch (error) {
+      console.error('Error generating games:', error);
+      setMessage({ type: 'error', text: 'Failed to generate games' });
+    } finally {
+      setGenerating(null);
     }
   };
 
+  const handleDelete = async (theme: string) => {
+    if (!window.confirm(`Are you sure you want to delete all games for ${theme}? This cannot be undone.`)) {
+      return;
+    }
+
+    setDeleting(theme);
+    setMessage(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/games/${theme}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: data.message });
+        await loadData();
+      } else {
+        setMessage({ type: 'error', text: data.message || 'Delete failed' });
+      }
+    } catch (error) {
+      console.error('Error deleting games:', error);
+      setMessage({ type: 'error', text: 'Failed to delete games' });
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const handleCountChange = (decade: string, value: string) => {
+    // Allow empty string or any number, we'll clamp on submit
+    if (value === '') {
+      setGenerateCount({ ...generateCount, [decade]: '' as any });
+    } else {
+      const num = parseInt(value);
+      if (!isNaN(num)) {
+        setGenerateCount({ ...generateCount, [decade]: num });
+      }
+    }
+  };
+
+  if (loading && !stats) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="admin-panel">
-      <div className="card">
-        <div className="card-header">
-          <h1 className="card-title">⚙️ Admin Panel</h1>
-          <p className="card-description">Create and manage music trivia games</p>
+    <div style={{ padding: '1rem', maxWidth: '1400px', margin: '0 auto' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.75rem', marginBottom: '0.25rem', color: 'var(--text-primary)', fontWeight: '600' }}>
+          Admin Panel
+        </h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+          Generate and manage music trivia games
+        </p>
+      </div>
+
+      {message && (
+        <div style={{
+          padding: '0.875rem 1rem',
+          marginBottom: '1rem',
+          borderRadius: '8px',
+          background: message.type === 'success' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+          color: message.type === 'success' ? '#16a34a' : '#dc2626',
+          border: `1px solid ${message.type === 'success' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+          fontSize: '0.875rem',
+          fontWeight: '500'
+        }}>
+          {message.text}
+        </div>
+      )}
+
+      {stats && (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+          gap: '0.75rem',
+          marginBottom: '1.5rem'
+        }}>
+          <div style={{
+            padding: '1rem',
+            background: 'var(--card-bg)',
+            borderRadius: '10px',
+            boxShadow: 'var(--card-shadow)',
+            border: '1px solid var(--border-color)'
+          }}>
+            <div style={{ fontSize: '1.75rem', fontWeight: '700', color: 'var(--primary-color)', marginBottom: '0.25rem' }}>
+              {stats.totalGames}
+            </div>
+            <div style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.025em' }}>
+              Total Games
+            </div>
+          </div>
+          <div style={{
+            padding: '1rem',
+            background: 'var(--card-bg)',
+            borderRadius: '10px',
+            boxShadow: 'var(--card-shadow)',
+            border: '1px solid var(--border-color)'
+          }}>
+            <div style={{ fontSize: '1.75rem', fontWeight: '700', color: 'var(--primary-color)', marginBottom: '0.25rem' }}>
+              {stats.totalQuestions}
+            </div>
+            <div style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.025em' }}>
+              Total Questions
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div style={{
+        background: 'var(--card-bg)',
+        borderRadius: '12px',
+        padding: '1.25rem',
+        boxShadow: 'var(--card-shadow)',
+        border: '1px solid var(--border-color)'
+      }}>
+        <div style={{ marginBottom: '1.25rem' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: 'var(--text-primary)', fontWeight: '600' }}>
+            Decade Games
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.813rem' }}>
+            Strict filtering: all 10 questions from selected decade only
+          </p>
         </div>
 
-        <form onSubmit={handleSubmitGame}>
-          {/* Game Details */}
-          <div style={{ marginBottom: '2rem' }}>
-            <h2 style={{ marginBottom: '1rem' }}>Game Details</h2>
-            
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                Title *
-              </label>
-              <input
-                type="text"
-                className="text-input"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </div>
-
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                Description
-              </label>
-              <textarea
-                className="text-input"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                style={{ resize: 'vertical' }}
-              />
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <input
-                    type="checkbox"
-                    checked={isDaily}
-                    onChange={(e) => setIsDaily(e.target.checked)}
-                  />
-                  <span style={{ fontWeight: 'bold' }}>Daily Game</span>
-                </label>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                  Date
-                </label>
-                <input
-                  type="date"
-                  className="text-input"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Questions List */}
-          <div style={{ marginBottom: '2rem' }}>
-            <h2 style={{ marginBottom: '1rem' }}>
-              Questions ({questions.length}/10)
-            </h2>
-
-            {questions.map((q, index) => (
-              <div
-                key={index}
-                style={{
-                  padding: '1rem',
-                  background: '#f8f9ff',
-                  borderRadius: '8px',
-                  marginBottom: '0.5rem',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <div>
-                  <strong>Q{index + 1}:</strong> {q.question}
-                  <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem' }}>
-                    {q.category} · {q.difficulty} · {q.points} pts
-                  </div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gap: '0.75rem'
+        }}>
+          {decades.map(decade => (
+            <div key={decade.decade} style={{
+              padding: '1rem',
+              background: 'var(--bg-secondary)',
+              borderRadius: '8px',
+              border: '1px solid var(--border-color)',
+              transition: 'all 0.2s',
+              position: 'relative'
+            }}>
+              <div style={{ marginBottom: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
+                  <h3 style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: '600', margin: 0 }}>
+                    {decade.categoryName}
+                  </h3>
+                  <span style={{
+                    fontSize: '0.75rem',
+                    color: 'var(--primary-color)',
+                    fontWeight: '600',
+                    background: 'rgba(var(--primary-rgb, 99, 102, 241), 0.1)',
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: '12px'
+                  }}>
+                    {decade.existingGames} games
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={() => handleRemoveQuestion(index)}
-                  style={{ padding: '0.5rem 1rem' }}
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {/* Add Question Form */}
-          {questions.length < 10 && (
-            <div className="card" style={{ background: '#f8f9ff' }}>
-              <h3 style={{ marginBottom: '1rem' }}>Add Question</h3>
-
-              <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                  Question Type *
-                </label>
-                <select
-                  className="text-input"
-                  value={currentQuestion.type}
-                  onChange={(e) =>
-                    setCurrentQuestion({ ...currentQuestion, type: e.target.value as any })
-                  }
-                >
-                  <option value="multiple-choice">Multiple Choice</option>
-                  <option value="audio">Audio (Name That Tune)</option>
-                  <option value="text-input">Text Input</option>
-                </select>
+                <div style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <span>{decade.yearRange}</span>
+                  <span>•</span>
+                  <span>{decade.availableSongs} songs</span>
+                </div>
               </div>
 
-              <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                  Question *
-                </label>
-                <input
-                  type="text"
-                  className="text-input"
-                  value={currentQuestion.question || ''}
-                  onChange={(e) =>
-                    setCurrentQuestion({ ...currentQuestion, question: e.target.value })
-                  }
-                />
-              </div>
-
-              <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                  Correct Answer *
-                </label>
-                <input
-                  type="text"
-                  className="text-input"
-                  value={currentQuestion.correctAnswer || ''}
-                  onChange={(e) =>
-                    setCurrentQuestion({ ...currentQuestion, correctAnswer: e.target.value })
-                  }
-                />
-              </div>
-
-              {currentQuestion.type === 'multiple-choice' && (
-                <div style={{ marginBottom: '1rem' }}>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                    Options (comma-separated) *
-                  </label>
-                  <input
-                    type="text"
-                    className="text-input"
-                    placeholder="Option 1, Option 2, Option 3, Option 4"
-                    value={currentQuestion.options?.join(', ') || ''}
-                    onChange={(e) =>
-                      setCurrentQuestion({
-                        ...currentQuestion,
-                        options: e.target.value.split(',').map((s) => s.trim()),
-                      })
-                    }
-                  />
-                </div>
-              )}
-
-              {currentQuestion.type === 'audio' && (
-                <div style={{ marginBottom: '1rem' }}>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                    Audio URL
-                  </label>
-                  <input
-                    type="text"
-                    className="text-input"
-                    placeholder="http://example.com/audio.mp3"
-                    value={currentQuestion.audioUrl || ''}
-                    onChange={(e) =>
-                      setCurrentQuestion({ ...currentQuestion, audioUrl: e.target.value })
-                    }
-                  />
-                </div>
-              )}
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                    Category *
-                  </label>
-                  <input
-                    type="text"
-                    className="text-input"
-                    value={currentQuestion.category || ''}
-                    onChange={(e) =>
-                      setCurrentQuestion({ ...currentQuestion, category: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                    Difficulty *
-                  </label>
-                  <select
-                    className="text-input"
-                    value={currentQuestion.difficulty}
-                    onChange={(e) => {
-                      const difficulty = e.target.value as 'easy' | 'medium' | 'hard';
-                      const points = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 15 : 20;
-                      setCurrentQuestion({ ...currentQuestion, difficulty, points });
-                    }}
-                  >
-                    <option value="easy">Easy (10 pts)</option>
-                    <option value="medium">Medium (15 pts)</option>
-                    <option value="hard">Hard (20 pts)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                    Points
-                  </label>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: '500' }}>Qty:</span>
                   <input
                     type="number"
-                    className="text-input"
-                    value={currentQuestion.points || 10}
-                    onChange={(e) =>
-                      setCurrentQuestion({ ...currentQuestion, points: parseInt(e.target.value) })
-                    }
+                    min="1"
+                    value={generateCount[decade.decade] !== undefined ? generateCount[decade.decade] : 10}
+                    onChange={(e) => handleCountChange(decade.decade, e.target.value)}
+                    disabled={!decade.canGenerate || generating === decade.decade}
+                    placeholder="1-100"
+                    style={{
+                      width: '60px',
+                      padding: '0.5rem',
+                      borderRadius: '6px',
+                      border: '1px solid var(--border-color)',
+                      background: 'var(--card-bg)',
+                      color: 'var(--text-primary)',
+                      fontSize: '0.875rem',
+                      fontWeight: '500',
+                      textAlign: 'center'
+                    }}
                   />
                 </div>
+
+                <button
+                  onClick={() => handleGenerate(decade.decade)}
+                  disabled={!decade.canGenerate || generating !== null}
+                  style={{
+                    flex: 1,
+                    padding: '0.5rem 0.875rem',
+                    borderRadius: '6px',
+                    border: 'none',
+                    background: decade.canGenerate && generating !== decade.decade ? 'var(--primary-color)' : '#6b7280',
+                    color: 'white',
+                    fontWeight: '600',
+                    fontSize: '0.813rem',
+                    cursor: decade.canGenerate && !generating ? 'pointer' : 'not-allowed',
+                    opacity: generating === decade.decade ? 0.7 : 1,
+                    transition: 'all 0.15s',
+                    whiteSpace: 'nowrap'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (decade.canGenerate && !generating) {
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  {generating === decade.decade ? '⏳ Generating...' : '+ Generate'}
+                </button>
+
+                {decade.existingGames > 0 && (
+                  <button
+                    onClick={() => handleDelete(decade.decade)}
+                    disabled={deleting !== null}
+                    style={{
+                      padding: '0.5rem',
+                      borderRadius: '6px',
+                      border: '1px solid #ef4444',
+                      background: 'transparent',
+                      color: '#ef4444',
+                      fontWeight: '600',
+                      fontSize: '0.813rem',
+                      cursor: deleting ? 'not-allowed' : 'pointer',
+                      opacity: deleting === decade.decade ? 0.7 : 1,
+                      transition: 'all 0.15s',
+                      width: '36px',
+                      height: '36px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    title="Delete all games"
+                    onMouseEnter={(e) => {
+                      if (!deleting) {
+                        e.currentTarget.style.background = '#ef4444';
+                        e.currentTarget.style.color = 'white';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.color = '#ef4444';
+                    }}
+                  >
+                    {deleting === decade.decade ? '⏳' : '🗑'}
+                  </button>
+                )}
               </div>
 
-              <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                  Hint (optional)
-                </label>
-                <input
-                  type="text"
-                  className="text-input"
-                  value={currentQuestion.hint || ''}
-                  onChange={(e) =>
-                    setCurrentQuestion({ ...currentQuestion, hint: e.target.value })
-                  }
-                />
-              </div>
-
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={handleAddQuestion}
-              >
-                Add Question
-              </button>
+              {!decade.canGenerate && (
+                <div style={{
+                  marginTop: '0.5rem',
+                  color: '#ef4444',
+                  fontSize: '0.75rem',
+                  fontWeight: '500',
+                  fontStyle: 'italic'
+                }}>
+                  ⚠️ Not enough songs (need 10+)
+                </div>
+              )}
             </div>
-          )}
-
-          {/* Submit Button */}
-          {questions.length === 10 && (
-            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-              <button type="submit" className="btn btn-primary" style={{ fontSize: '1.2rem' }}>
-                Create Game
-              </button>
-            </div>
-          )}
-        </form>
+          ))}
+        </div>
       </div>
     </div>
   );

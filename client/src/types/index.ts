@@ -15,7 +15,7 @@ export interface Game {
   gameId: string;
   date: Date;
   title: string;
-  description: string;
+  description?: string;
   questions: Question[];
   isDaily: boolean;
   theme?: string;

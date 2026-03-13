@@ -4,8 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
-    image: roadie-rumble-backend:${VERSION:-1.0.0}-dev
-    container_name: roadie-rumble-backend-dev
+    image: jitterbox-rocks-backend:${VERSION:-1.0.0}-dev
+    container_name: jitterbox-rocks-backend-dev
     restart: unless-stopped
     environment:
       NODE_ENV: development
@@ -18,7 +18,7 @@ services:
       - ./uploads:/app/uploads
       - /app/node_modules
     networks:
-      - roadie-rumble-network
+      - jitterbox-rocks-network
     command: npm run server
 
   # Frontend Service (Development)
@@ -26,8 +26,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend.dev
-    image: roadie-rumble-frontend:${VERSION:-1.0.0}-dev
-    container_name: roadie-rumble-frontend-dev
+    image: jitterbox-rocks-frontend:${VERSION:-1.0.0}-dev
+    container_name: jitterbox-rocks-frontend-dev
     restart: unless-stopped
     environment:
       - REACT_APP_API_URL=http://localhost:5000/api
@@ -41,10 +41,10 @@ services:
     depends_on:
       - backend
     networks:
-      - roadie-rumble-network
+      - jitterbox-rocks-network
     stdin_open: true
     tty: true
 
 networks:
-  roadie-rumble-network:
+  jitterbox-rocks-network:
     driver: bridge

@@ -14,6 +14,7 @@ export interface IQuestion {
 export interface IGame {
   gameId: string;
   title: string;
+  description?: string;
   date: string;
   questions: IQuestion[];
   isDaily: boolean;
@@ -24,13 +25,14 @@ export class GameRepository {
   // Create a new game
   static create(game: IGame): IGame {
     const insert = db.prepare(`
-      INSERT INTO games (game_id, title, date, is_daily, theme)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO games (game_id, title, description, date, is_daily, theme)
+      VALUES (?, ?, ?, ?, ?, ?)
     `);
     
     insert.run(
       game.gameId, 
-      game.title, 
+      game.title,
+      game.description || null, 
       game.date, 
       game.isDaily ? 1 : 0,
       game.theme || 'mixed'
@@ -75,6 +77,7 @@ export class GameRepository {
     return {
       gameId: game.game_id,
       title: game.title,
+      description: game.description || undefined,
       date: game.date,
       isDaily: game.is_daily === 1,
       theme: game.theme || 'mixed',
@@ -126,6 +129,19 @@ export class GameRepository {
   static deleteAll(): void {
     db.prepare('DELETE FROM questions').run();
     db.prepare('DELETE FROM games').run();
+  }
+
+  // Delete a specific game by gameId
+  static delete(gameId: string): void {
+    db.prepare('DELETE FROM questions WHERE game_id = ?').run(gameId);
+    db.prepare('DELETE FROM games WHERE game_id = ?').run(gameId);
+  }
+
+  // Delete all games for a specific theme
+  static deleteByTheme(theme: string): number {
+    const games = this.findByTheme(theme);
+    games.forEach(game => this.delete(game.gameId));
+    return games.length;
   }
 
   // Count games

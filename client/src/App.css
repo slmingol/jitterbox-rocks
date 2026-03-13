@@ -299,6 +299,8 @@ body {
 }
 
 /* Text Input Styles */
+input[type="text"],
+input[type="search"],
 .text-input {
   width: 100%;
   padding: 1rem;
@@ -306,13 +308,31 @@ body {
   border: 2px solid var(--border-color);
   border-radius: 8px;
   transition: border-color 0.3s;
-  background: var(--card-bg);
-  color: var(--text-primary);
+  background: var(--card-bg) !important;
+  color: var(--text-primary) !important;
 }
 
+input[type="text"]:focus,
+input[type="search"]:focus,
 .text-input:focus {
   outline: none;
   border-color: var(--primary-color);
+}
+
+/* Placeholder text color for dark mode */
+input[type="text"]::placeholder,
+input[type="search"]::placeholder,
+.text-input::placeholder {
+  color: var(--text-tertiary);
+  opacity: 1;
+}
+
+/* Autofill background override for dark mode */
+input[type="text"]:-webkit-autofill,
+input[type="search"]:-webkit-autofill,
+.text-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--card-bg) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
 }
 
 /* Audio Player Styles */

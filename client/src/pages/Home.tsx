@@ -49,11 +49,27 @@ const Home: React.FC = () => {
     localStorage.setItem('howToPlayDismissed', 'true');
   };
 
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && showHowToPlay) {
+        dismissHowToPlay();
+      }
+    };
+
+    if (showHowToPlay) {
+      window.addEventListener('keydown', handleEscapeKey);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [showHowToPlay]);
+
   return (
     <div className="home-page">
-      {/* Welcome + How to Play - Dismissable */}
+      {/* Welcome + How to Play - Combined Dismissable Section */}
       {showHowToPlay && (
-        <div className="card" style={{ marginBottom: '2rem', position: 'relative' }}>
+        <div className="card" style={{ marginBottom: '2rem', padding: '2.7rem 1.8rem', textAlign: 'center', background: 'linear-gradient(135deg, var(--card-bg) 0%, var(--bg-secondary) 100%)', position: 'relative' }}>
           <button
             onClick={dismissHowToPlay}
             style={{
@@ -62,7 +78,7 @@ const Home: React.FC = () => {
               right: '1rem',
               background: 'transparent',
               border: 'none',
-              fontSize: '1.5rem',
+              fontSize: '1.35rem',
               cursor: 'pointer',
               color: 'var(--text-tertiary)',
               padding: '0.25rem',
@@ -72,67 +88,81 @@ const Home: React.FC = () => {
           >
             ✕
           </button>
+
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.8rem' }}>
+            <img 
+              src="/logo.png" 
+              alt="Jitterbox Rocks" 
+              style={{ 
+                width: '100%',
+                maxWidth: '720px',
+                height: 'auto',
+                objectFit: 'contain'
+              }} 
+            />
+          </div>
           
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--primary-color)' }}>
-              🎸 Welcome to Roadie Rumble!
-            </h1>
-            <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '0' }}>
-              Test your music knowledge with our comprehensive trivia game featuring daily challenges,
-              practice mode, and detailed statistics tracking.
-            </p>
+          <h1 style={{ fontSize: '2.7rem', marginBottom: '0.9rem', color: 'var(--primary-color)', fontWeight: 'bold' }}>
+            Welcome to Jitterbox Rocks!
+          </h1>
+          
+          <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)', marginBottom: '1.8rem', maxWidth: '630px', margin: '0 auto 1.8rem auto' }}>
+            Test your music knowledge with our comprehensive trivia game featuring daily challenges,
+            practice mode, and detailed statistics tracking.
+          </p>
 
-            {!user && (
-              <div style={{ 
-                background: 'var(--warning-bg)', 
-                padding: '1rem', 
-                borderRadius: '8px', 
-                marginTop: '1.5rem',
-                display: 'inline-block'
-              }}>
-                <p style={{ color: 'var(--warning-text)', fontWeight: 600, margin: 0 }}>
-                  👆 Please login with a username to start playing and track your progress!
-                </p>
-              </div>
-            )}
-          </div>
+          {!user && (
+            <div style={{ 
+              background: 'var(--warning-bg)', 
+              padding: '1.125rem', 
+              borderRadius: '8px', 
+              marginBottom: '1.8rem',
+              display: 'inline-block',
+              maxWidth: '540px'
+            }}>
+              <p style={{ color: 'var(--warning-text)', fontWeight: 600, margin: 0, fontSize: '1rem' }}>
+                👆 Please login with a username to start playing and track your progress!
+              </p>
+            </div>
+          )}
 
-          <div style={{ textAlign: 'center' }}>
-            <h2 style={{ marginBottom: '1rem', color: 'var(--primary-color)', fontSize: '1.3rem' }}>📖 How to Play</h2>
+          <div style={{ textAlign: 'center', marginTop: '1.8rem' }}>
+            <h2 style={{ marginBottom: '1.35rem', color: 'var(--primary-color)', fontSize: '1.35rem' }}>📖 How to Play</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-            <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem', fontSize: '1rem' }}>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(216px, 1fr))', gap: '0.9rem', marginTop: '1.35rem' }}>
+            <div style={{ padding: '0.9rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: '0.9rem' }}>
                 📝 Multiple Question Types
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.81rem', margin: 0 }}>
                 Multiple choice, audio clips, or type-in answers
               </p>
             </div>
             
-            <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem', fontSize: '1rem' }}>
+            <div style={{ padding: '0.9rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: '0.9rem' }}>
                 ⏰ No Time Limits
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.81rem', margin: 0 }}>
                 Take your time - no pressure!
               </p>
             </div>
             
-            <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem', fontSize: '1rem' }}>
+            <div style={{ padding: '0.9rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: '0.9rem' }}>
                 🏆 Earn Points
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.81rem', margin: 0 }}>
                 Easy (10 pts), Medium (15 pts), Hard (20 pts)
               </p>
             </div>
             
-            <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.5rem', fontSize: '1rem' }}>
+            <div style={{ padding: '0.9rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: '0.9rem' }}>
                 🔥 Build Streaks
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.81rem', margin: 0 }}>
                 Play daily to compete on the leaderboard
               </p>
             </div>

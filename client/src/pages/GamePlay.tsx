@@ -388,6 +388,19 @@ const GamePlay: React.FC = () => {
   const currentQuestion: Question = game.questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / game.questions.length) * 100;
 
+  // Get all unique categories from the game
+  const gameCategories = Array.from(new Set(game.questions.map(q => q.category)));
+  
+  // Get pinned categories from localStorage
+  const pinnedCategories = (() => {
+    try {
+      const saved = localStorage.getItem('pinnedCategories');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  })();
+
   return (
     <div className="game-play">
       <div className="card">
@@ -410,8 +423,27 @@ const GamePlay: React.FC = () => {
             </div>
           </div>
 
-          <div className="question-category">
-            Category: {currentQuestion.category}
+          <div className="question-category" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
+            <span style={{ color: 'var(--text-secondary)' }}>Categories:</span>
+            {gameCategories.map(category => (
+              <span 
+                key={category}
+                style={{
+                  padding: '0.25rem 0.75rem',
+                  background: pinnedCategories.includes(category) ? 'var(--primary-color)' : 'var(--bg-secondary)',
+                  color: pinnedCategories.includes(category) ? 'white' : 'var(--text-primary)',
+                  borderRadius: '12px',
+                  fontSize: '0.85rem',
+                  fontWeight: 500,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem'
+                }}
+              >
+                {pinnedCategories.includes(category) && '📌 '}
+                {category}
+              </span>
+            ))}
           </div>
 
           <h2 className="question-text">{currentQuestion.question}</h2>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -10,6 +10,7 @@ const Header: React.FC = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [username, setUsername] = useState('');
   const menuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -45,7 +46,11 @@ const Header: React.FC = () => {
   const handleShowHelp = () => {
     localStorage.removeItem('howToPlayDismissed');
     setShowUserMenu(false);
-    window.location.reload();
+    navigate('/');
+    // Small delay to ensure navigation happens before reload
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
 
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
@@ -63,8 +68,17 @@ const Header: React.FC = () => {
   return (
     <header className="header">
       <div className="header-content">
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <h1>� Roadie Rumble</h1>
+        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <img 
+            src="/logo.png" 
+            alt="Jitterbox Rocks" 
+            style={{ 
+              height: '50px', 
+              width: 'auto',
+              objectFit: 'contain'
+            }} 
+          />
+          <h1 style={{ margin: 0 }}>Jitterbox Rocks</h1>
         </Link>
         
         <nav>

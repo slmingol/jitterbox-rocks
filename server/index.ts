@@ -6,6 +6,7 @@ import fs from 'fs';
 import './config/sqlite'; // Initialize SQLite database
 import gameRoutes from './routes/games';
 import statsRoutes from './routes/stats';
+import adminRoutes from './routes/admin';
 import autocompleteService from './services/autocompleteService';
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 // Routes
 app.use('/api/games', gameRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Version endpoint
 app.get('/api/version', (req, res) => {

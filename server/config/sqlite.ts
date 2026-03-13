@@ -26,6 +26,7 @@ export const initializeDatabase = () => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       game_id TEXT UNIQUE NOT NULL,
       title TEXT NOT NULL,
+      description TEXT,
       date TEXT NOT NULL,
       is_daily INTEGER NOT NULL DEFAULT 1,
       theme TEXT DEFAULT 'mixed',
