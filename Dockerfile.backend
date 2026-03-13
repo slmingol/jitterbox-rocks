@@ -21,6 +21,9 @@ COPY server ./server
 # Create data directory for SQLite
 RUN mkdir -p /app/data
 
+# Create uploads directory for database imports
+RUN mkdir -p /app/uploads/temp
+
 # Expose port
 EXPOSE 5000
 
