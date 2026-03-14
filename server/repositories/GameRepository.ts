@@ -39,8 +39,8 @@ export class GameRepository {
     
     // Insert questions
     const insertQuestion = getDb().prepare(`
-      INSERT INTO questions (game_id, question_index, type, question, category, difficulty, points, correct_answer, options, audio_url)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO questions (game_id, question_index, type, question, category, difficulty, points, correct_answer, options)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     
     game.questions.forEach((q, index) => {
@@ -53,8 +53,7 @@ export class GameRepository {
         q.difficulty,
         q.points,
         q.correctAnswer,
-        q.options ? JSON.stringify(q.options) : null,
-        q.audioUrl || null
+        JSON.stringify(q.options)
       );
     });
     
@@ -87,8 +86,7 @@ export class GameRepository {
         difficulty: q.difficulty,
         points: q.points,
         correctAnswer: q.correct_answer,
-        options: q.options ? JSON.parse(q.options) : undefined,
-        audioUrl: q.audio_url || undefined
+        options: q.options ? JSON.parse(q.options) : []
       }))
     };
   }
