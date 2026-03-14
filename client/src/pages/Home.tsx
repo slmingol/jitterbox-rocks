@@ -90,16 +90,19 @@ const Home: React.FC = () => {
           </button>
 
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'clamp(1rem, 3vw, 1.8rem)' }}>
-            <img 
-              src="/logo-cat-music-transparent.png" 
-              alt="Jitterbox Rocks" 
-              style={{ 
-                width: '100%',
-                maxWidth: '720px',
-                height: 'auto',
-                objectFit: 'contain'
-              }} 
-            />
+            <picture>
+              <source srcSet="/logo-welcome.webp" type="image/webp" />
+              <img 
+                src="/logo-welcome.png" 
+                alt="Jitterbox Rocks" 
+                style={{ 
+                  width: '100%',
+                  maxWidth: '720px',
+                  height: 'auto',
+                  objectFit: 'contain'
+                }} 
+              />
+            </picture>
           </div>
           
           <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.7rem)', marginBottom: '0.9rem', color: 'var(--primary-color)', fontWeight: 'bold' }}>
