@@ -69,33 +69,33 @@ const DailyGame: React.FC = () => {
       <div className="card">
         <div className="card-header">
           <h1 className="card-title">🎯 Daily Challenge</h1>
-          <p style={{ color: textSecondary, fontSize: '1.1rem' }}>
+          <p style={{ color: textSecondary, fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)' }}>
             {format(new Date(game.date), 'EEEE, MMMM d, yyyy')}
           </p>
         </div>
 
         <div style={{ marginBottom: '2rem' }}>
-          <h2 style={{ color: '#667eea', marginBottom: '0.5rem' }}>{game.title}</h2>
-          <p style={{ color: textSecondary, fontSize: '1.1rem' }}>{game.description}</p>
+          <h2 style={{ color: '#667eea', marginBottom: '0.5rem', fontSize: 'clamp(1.2rem, 3.5vw, 1.5rem)' }}>{game.title}</h2>
+          <p style={{ color: textSecondary, fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)' }}>{game.description}</p>
         </div>
 
         <div className="stats-grid" style={{ marginBottom: '2rem' }}>
           <div style={{ background: cardBg, padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#667eea' }}>
+            <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 'bold', color: '#667eea' }}>
               {game.questions.length}
             </div>
             <div style={{ color: textSecondary }}>Questions</div>
           </div>
 
           <div style={{ background: cardBg, padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#764ba2' }}>
+            <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 'bold', color: '#764ba2' }}>
               {game.questions.reduce((sum, q) => sum + q.points, 0)}
             </div>
             <div style={{ color: textSecondary }}>Total Points</div>
           </div>
 
           <div style={{ background: cardBg, padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#667eea' }}>
+            <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 'bold', color: '#667eea' }}>
               ⏰
             </div>
             <div style={{ color: textSecondary }}>No Time Limit</div>
@@ -105,7 +105,7 @@ const DailyGame: React.FC = () => {
         <div style={{ textAlign: 'center' }}>
           <button
             className="btn btn-primary"
-            style={{ fontSize: '1.2rem', padding: '1rem 2rem' }}
+            style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)' }}
             onClick={() => navigate(`/game/${game.gameId}`)}
           >
             Start Playing

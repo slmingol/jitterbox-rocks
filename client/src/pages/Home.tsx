@@ -69,16 +69,16 @@ const Home: React.FC = () => {
     <div className="home-page">
       {/* Welcome + How to Play - Combined Dismissable Section */}
       {showHowToPlay && (
-        <div className="card" style={{ marginBottom: '2rem', padding: '2.7rem 1.8rem', textAlign: 'center', background: 'linear-gradient(135deg, var(--card-bg) 0%, var(--bg-secondary) 100%)', position: 'relative' }}>
+        <div className="card" style={{ marginBottom: '2rem', padding: 'clamp(1rem, 3vw, 2.7rem) clamp(1rem, 3vw, 1.8rem)', textAlign: 'center', background: 'linear-gradient(135deg, var(--card-bg) 0%, var(--bg-secondary) 100%)', position: 'relative' }}>
           <button
             onClick={dismissHowToPlay}
             style={{
               position: 'absolute',
-              top: '1rem',
-              right: '1rem',
+              top: '0.5rem',
+              right: '0.5rem',
               background: 'transparent',
               border: 'none',
-              fontSize: '1.35rem',
+              fontSize: 'clamp(1.2rem, 3vw, 1.35rem)',
               cursor: 'pointer',
               color: 'var(--text-tertiary)',
               padding: '0.25rem',
@@ -89,7 +89,7 @@ const Home: React.FC = () => {
             ✕
           </button>
 
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.8rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'clamp(1rem, 3vw, 1.8rem)' }}>
             <img 
               src="/logo.png" 
               alt="Jitterbox Rocks" 
@@ -102,11 +102,11 @@ const Home: React.FC = () => {
             />
           </div>
           
-          <h1 style={{ fontSize: '2.7rem', marginBottom: '0.9rem', color: 'var(--primary-color)', fontWeight: 'bold' }}>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.7rem)', marginBottom: '0.9rem', color: 'var(--primary-color)', fontWeight: 'bold' }}>
             Welcome to Jitterbox Rocks!
           </h1>
           
-          <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)', marginBottom: '1.8rem', maxWidth: '630px', margin: '0 auto 1.8rem auto' }}>
+          <p style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.125rem)', color: 'var(--text-secondary)', marginBottom: '1.8rem', maxWidth: '630px', margin: '0 auto 1.8rem auto' }}>
             Test your music knowledge with our comprehensive trivia game featuring daily challenges,
             practice mode, and detailed statistics tracking.
           </p>
@@ -114,55 +114,56 @@ const Home: React.FC = () => {
           {!user && (
             <div style={{ 
               background: 'var(--warning-bg)', 
-              padding: '1.125rem', 
+              padding: 'clamp(0.75rem, 2vw, 1.125rem)', 
               borderRadius: '8px', 
               marginBottom: '1.8rem',
               display: 'inline-block',
-              maxWidth: '540px'
+              maxWidth: '540px',
+              width: '100%'
             }}>
-              <p style={{ color: 'var(--warning-text)', fontWeight: 600, margin: 0, fontSize: '1rem' }}>
+              <p style={{ color: 'var(--warning-text)', fontWeight: 600, margin: 0, fontSize: 'clamp(0.9rem, 2vw, 1rem)' }}>
                 👆 Please login with a username to start playing and track your progress!
               </p>
             </div>
           )}
 
           <div style={{ textAlign: 'center', marginTop: '1.8rem' }}>
-            <h2 style={{ marginBottom: '1.35rem', color: 'var(--primary-color)', fontSize: '1.35rem' }}>📖 How to Play</h2>
+            <h2 style={{ marginBottom: '1.35rem', color: 'var(--primary-color)', fontSize: 'clamp(1.1rem, 3vw, 1.35rem)' }}>📖 How to Play</h2>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(216px, 1fr))', gap: '0.9rem', marginTop: '1.35rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.9rem', marginTop: '1.35rem' }}>
             <div style={{ padding: '0.9rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: '0.9rem' }}>
+              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: 'clamp(0.85rem, 2vw, 0.9rem)' }}>
                 📝 Multiple Question Types
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.81rem', margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(0.75rem, 1.8vw, 0.81rem)', margin: 0 }}>
                 Multiple choice, audio clips, or type-in answers
               </p>
             </div>
             
             <div style={{ padding: '0.9rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: '0.9rem' }}>
+              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: 'clamp(0.85rem, 2vw, 0.9rem)' }}>
                 ⏰ No Time Limits
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.81rem', margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(0.75rem, 1.8vw, 0.81rem)', margin: 0 }}>
                 Take your time - no pressure!
               </p>
             </div>
             
             <div style={{ padding: '0.9rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: '0.9rem' }}>
+              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: 'clamp(0.85rem, 2vw, 0.9rem)' }}>
                 🏆 Earn Points
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.81rem', margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(0.75rem, 1.8vw, 0.81rem)', margin: 0 }}>
                 Easy (10 pts), Medium (15 pts), Hard (20 pts)
               </p>
             </div>
             
             <div style={{ padding: '0.9rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: '0.9rem' }}>
+              <h3 style={{ color: 'var(--primary-color)', marginBottom: '0.45rem', fontSize: 'clamp(0.85rem, 2vw, 0.9rem)' }}>
                 🔥 Build Streaks
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.81rem', margin: 0 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(0.75rem, 1.8vw, 0.81rem)', margin: 0 }}>
                 Play daily to compete on the leaderboard
               </p>
             </div>
@@ -208,12 +209,12 @@ const Home: React.FC = () => {
         {/* System Stats - Compact Sidebar */}
         {!loading && systemStats && (
           <div className="card" style={{ 
-            minWidth: '200px',
-            maxWidth: '250px',
+            minWidth: 'auto',
+            maxWidth: 'none',
             padding: '1.5rem',
           }}>
             <h3 style={{ 
-              fontSize: '1rem', 
+              fontSize: 'clamp(0.9rem, 2.5vw, 1rem)', 
               marginBottom: '1rem', 
               color: 'var(--text-primary)',
               fontWeight: '600'
@@ -222,32 +223,32 @@ const Home: React.FC = () => {
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>
+                <div style={{ fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', fontWeight: 'bold', color: 'var(--primary-color)' }}>
                   {systemStats.totalGames.toLocaleString()}
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Games</div>
+                <div style={{ fontSize: 'clamp(0.7rem, 1.5vw, 0.75rem)', color: 'var(--text-tertiary)' }}>Games</div>
               </div>
               <div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>
+                <div style={{ fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', fontWeight: 'bold', color: 'var(--primary-color)' }}>
                   {systemStats.totalSongs.toLocaleString()}
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Songs</div>
+                <div style={{ fontSize: 'clamp(0.7rem, 1.5vw, 0.75rem)', color: 'var(--text-tertiary)' }}>Songs</div>
               </div>
               <div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>
+                <div style={{ fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', fontWeight: 'bold', color: 'var(--primary-color)' }}>
                   {systemStats.totalPlayers.toLocaleString()}
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Players</div>
+                <div style={{ fontSize: 'clamp(0.7rem, 1.5vw, 0.75rem)', color: 'var(--text-tertiary)' }}>Players</div>
               </div>
               {systemStats.totalQuestionsAnswered > 0 && (
                 <div style={{ 
                   paddingTop: '0.75rem', 
                   borderTop: '1px solid var(--border-color)'
                 }}>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--secondary-color)' }}>
+                  <div style={{ fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', fontWeight: 'bold', color: 'var(--secondary-color)' }}>
                     {systemStats.globalAccuracy}%
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Accuracy</div>
+                  <div style={{ fontSize: 'clamp(0.7rem, 1.5vw, 0.75rem)', color: 'var(--text-tertiary)' }}>Accuracy</div>
                 </div>
               )}
             </div>

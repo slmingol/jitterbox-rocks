@@ -68,17 +68,20 @@ const Header: React.FC = () => {
   return (
     <header className="header">
       <div className="header-content">
-        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', maxWidth: '100%' }}>
           <img 
             src="/logo.png" 
             alt="Jitterbox Rocks" 
             style={{ 
-              height: '50px', 
+              height: '40px', 
+              maxHeight: '50px',
               width: 'auto',
-              objectFit: 'contain'
+              maxWidth: '50px',
+              objectFit: 'contain',
+              flexShrink: 0
             }} 
           />
-          <h1 style={{ margin: 0 }}>Jitterbox Rocks</h1>
+          <h1 style={{ margin: 0, fontSize: 'clamp(1.2rem, 4vw, 1.8rem)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Jitterbox Rocks</h1>
         </Link>
         
         <nav>

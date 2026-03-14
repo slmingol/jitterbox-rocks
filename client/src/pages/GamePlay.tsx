@@ -399,7 +399,7 @@ const GamePlay: React.FC = () => {
     return (
       <div className="card">
         <div className="score-display">
-          <h1 style={{ color: '#667eea', marginBottom: '1rem' }}>🎉 Game Complete!</h1>
+          <h1 style={{ color: '#667eea', marginBottom: '1rem', fontSize: 'clamp(1.5rem, 5vw, 2rem)' }}>🎉 Game Complete!</h1>
           
           <div className="score-value">{score}</div>
           <div className="score-label">Total Points</div>
@@ -421,7 +421,7 @@ const GamePlay: React.FC = () => {
             </div>
           </div>
 
-          <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+          <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button className="btn btn-primary" onClick={() => navigate('/stats')}>
               View Stats
             </button>
@@ -515,31 +515,32 @@ const GamePlay: React.FC = () => {
                   padding: '0.75rem', 
                   borderRadius: '8px', 
                   marginBottom: '1rem',
-                  fontSize: '0.9rem',
-                  color: '#666'
+                  fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+                  color: '#666',
+                  wordWrap: 'break-word'
                 }}>
-                  ⌨️ <strong>Keyboard shortcuts:</strong> Press 1-{currentQuestion.options?.length || 0} to select, ↑↓ arrows to navigate, <kbd style={{ 
+                  ⌨️ <strong>Shortcuts:</strong> Press 1-{currentQuestion.options?.length || 0} to select, ↑↓ arrows, <kbd style={{ 
                     padding: '0.1rem 0.3rem', 
                     background: '#fff', 
                     border: '1px solid #ccc', 
                     borderRadius: '3px',
                     fontFamily: 'monospace',
                     fontSize: '0.85em'
-                  }}>Enter</kbd> to submit, <kbd style={{ 
+                  }}>Enter</kbd> = submit, <kbd style={{ 
                     padding: '0.1rem 0.3rem', 
                     background: '#fff', 
                     border: '1px solid #ccc', 
                     borderRadius: '3px',
                     fontFamily: 'monospace',
                     fontSize: '0.85em'
-                  }}>Esc</kbd> or <kbd style={{ 
+                  }}>Esc</kbd>/<kbd style={{ 
                     padding: '0.1rem 0.3rem', 
                     background: '#fff', 
                     border: '1px solid #ccc', 
                     borderRadius: '3px',
                     fontFamily: 'monospace',
                     fontSize: '0.85em'
-                  }}>S</kbd> to skip
+                  }}>S</kbd> = skip
                 </div>
               )}
               <div className="options-container">
@@ -601,31 +602,32 @@ const GamePlay: React.FC = () => {
                   padding: '0.75rem', 
                   borderRadius: '8px', 
                   marginTop: '1rem',
-                  fontSize: '0.9rem',
-                  color: '#666'
+                  fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+                  color: '#666',
+                  wordWrap: 'break-word'
                 }}>
-                  ⌨️ <strong>Keyboard shortcuts:</strong> <kbd style={{ 
+                  ⌨️ <strong>Shortcuts:</strong> <kbd style={{ 
                     padding: '0.1rem 0.3rem', 
                     background: '#fff', 
                     border: '1px solid #ccc', 
                     borderRadius: '3px',
                     fontFamily: 'monospace',
                     fontSize: '0.85em'
-                  }}>Enter</kbd> to submit, <kbd style={{ 
+                  }}>Enter</kbd> = submit, <kbd style={{ 
                     padding: '0.1rem 0.3rem', 
                     background: '#fff', 
                     border: '1px solid #ccc', 
                     borderRadius: '3px',
                     fontFamily: 'monospace',
                     fontSize: '0.85em'
-                  }}>Esc</kbd> or <kbd style={{ 
+                  }}>Esc</kbd>/<kbd style={{ 
                     padding: '0.1rem 0.3rem', 
                     background: '#fff', 
                     border: '1px solid #ccc', 
                     borderRadius: '3px',
                     fontFamily: 'monospace',
                     fontSize: '0.85em'
-                  }}>S</kbd> to skip
+                  }}>S</kbd> = skip
                 </div>
               )}
               <div style={{ position: 'relative' }}>
@@ -715,31 +717,32 @@ const GamePlay: React.FC = () => {
                   padding: '0.75rem', 
                   borderRadius: '8px', 
                   marginBottom: '1rem',
-                  fontSize: '0.9rem',
-                  color: '#666'
+                  fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+                  color: '#666',
+                  wordWrap: 'break-word'
                 }}>
-                  ⌨️ <strong>Keyboard shortcuts:</strong> <kbd style={{ 
+                  ⌨️ <strong>Shortcuts:</strong> <kbd style={{ 
                     padding: '0.1rem 0.3rem', 
                     background: '#fff', 
                     border: '1px solid #ccc', 
                     borderRadius: '3px',
                     fontFamily: 'monospace',
                     fontSize: '0.85em'
-                  }}>Enter</kbd> to submit, <kbd style={{ 
+                  }}>Enter</kbd> = submit, <kbd style={{ 
                     padding: '0.1rem 0.3rem', 
                     background: '#fff', 
                     border: '1px solid #ccc', 
                     borderRadius: '3px',
                     fontFamily: 'monospace',
                     fontSize: '0.85em'
-                  }}>Esc</kbd> or <kbd style={{ 
+                  }}>Esc</kbd>/<kbd style={{ 
                     padding: '0.1rem 0.3rem', 
                     background: '#fff', 
                     border: '1px solid #ccc', 
                     borderRadius: '3px',
                     fontFamily: 'monospace',
                     fontSize: '0.85em'
-                  }}>S</kbd> to skip
+                  }}>S</kbd> = skip
                 </div>
               )}
               <div style={{ position: 'relative' }}>
@@ -881,9 +884,9 @@ const GamePlay: React.FC = () => {
           </div>
 
           {/* Current Score */}
-          <div style={{ marginTop: '2rem', textAlign: 'center', color: '#666' }}>
-            Current Score: <strong style={{ color: '#667eea', fontSize: '1.2rem' }}>{score}</strong> |
-            Correct: <strong style={{ color: '#28a745', fontSize: '1.2rem' }}>{correctAnswers}</strong>
+          <div style={{ marginTop: '2rem', textAlign: 'center', color: '#666', fontSize: 'clamp(0.9rem, 2vw, 1rem)', wordWrap: 'break-word' }}>
+            Current Score: <strong style={{ color: '#667eea', fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>{score}</strong> |
+            Correct: <strong style={{ color: '#28a745', fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>{correctAnswers}</strong>
           </div>
         </div>
       </div>

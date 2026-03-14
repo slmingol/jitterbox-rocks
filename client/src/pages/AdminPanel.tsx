@@ -206,10 +206,10 @@ const AdminPanel: React.FC = () => {
   return (
     <div style={{ padding: '1rem', maxWidth: '1400px', margin: '0 auto' }}>
       <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '0.25rem', color: 'var(--text-primary)', fontWeight: '600' }}>
+        <h1 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.75rem)', marginBottom: '0.25rem', color: 'var(--text-primary)', fontWeight: '600' }}>
           Admin Panel
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(0.8rem, 2vw, 0.875rem)' }}>
           Generate and manage music trivia games
         </p>
       </div>
