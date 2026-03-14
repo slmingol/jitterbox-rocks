@@ -20,6 +20,11 @@ export const gameApi = {
     return response.data;
   },
 
+  getPastDailyGames: async (days: number = 7): Promise<Array<{date: string, game: Game | null}>> => {
+    const response = await api.get('/games/daily/past', { params: { days } });
+    return response.data;
+  },
+
   getGame: async (gameId: string): Promise<Game> => {
     const response = await api.get(`/games/${gameId}`);
     return response.data;

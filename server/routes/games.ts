@@ -5,6 +5,7 @@ const router = Router();
 
 // Public routes
 router.get('/themes', gameController.getAllThemes.bind(gameController));
+router.get('/daily/past', gameController.getPastDailyGames.bind(gameController));
 router.get('/daily', gameController.getDailyGame.bind(gameController));
 router.get('/random', gameController.getRandomGame.bind(gameController));
 router.get('/', gameController.getAllGames.bind(gameController));

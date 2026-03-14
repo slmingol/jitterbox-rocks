@@ -24,6 +24,21 @@ export class GameController {
   }
 
   /**
+   * GET /api/games/daily/past
+   * Get past daily games
+   */
+  async getPastDailyGames(req: Request, res: Response) {
+    try {
+      const days = parseInt(req.query.days as string) || 7;
+      const pastGames = await gameService.getPastDailyGames(days);
+      res.json(pastGames);
+    } catch (error) {
+      console.error('Error fetching past daily games:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+
+  /**
    * GET /api/games/:gameId
    * Get a specific game by ID
    */

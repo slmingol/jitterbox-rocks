@@ -12,6 +12,24 @@ export class GameService {
   }
 
   /**
+   * Get daily games for the last N days
+   */
+  async getPastDailyGames(days: number = 7): Promise<Array<{date: string, game: IGame | null}>> {
+    const results: Array<{date: string, game: IGame | null}> = [];
+    const today = startOfDay(new Date());
+    
+    for (let i = 1; i <= days; i++) {
+      const pastDate = new Date(today);
+      pastDate.setDate(today.getDate() - i);
+      const dateStr = format(pastDate, 'yyyy-MM-dd');
+      const game = await GameRepository.findByDate(dateStr);
+      results.push({ date: dateStr, game });
+    }
+    
+    return results;
+  }
+
+  /**
    * Get a game by ID
    */
   async getGameById(gameId: string): Promise<IGame | null> {

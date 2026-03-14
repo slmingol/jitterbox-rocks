@@ -7,6 +7,7 @@ import { useTheme } from '../context/ThemeContext';
 
 const DailyGame: React.FC = () => {
   const [game, setGame] = useState<Game | null>(null);
+  const [pastGames, setPastGames] = useState<Array<{date: string, game: Game | null}>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const DailyGame: React.FC = () => {
 
   useEffect(() => {
     loadDailyGame();
+    loadPastGames();
   }, []);
 
   const loadDailyGame = async () => {
@@ -31,6 +33,15 @@ const DailyGame: React.FC = () => {
       setError(err.response?.data?.message || 'Failed to load daily game');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadPastGames = async () => {
+    try {
+      const past = await gameApi.getPastDailyGames(7);
+      setPastGames(past);
+    } catch (err) {
+      console.error('Failed to load past games:', err);
     }
   };
 
@@ -143,6 +154,77 @@ const DailyGame: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* Past 7 Days */}
+      {pastGames.length > 0 && (
+        <div style={{ 
+          marginTop: '2rem',
+          padding: '1.5rem',
+          background: isDark ? '#1a1a2e' : '#f0f0f5',
+          borderRadius: '12px',
+          opacity: 0.85
+        }}>
+          <h4 style={{ 
+            fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
+            color: textSecondary,
+            marginBottom: '1rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>
+            Previous Daily Challenges
+          </h4>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gap: '1rem'
+          }}>
+            {pastGames.map(({ date, game: pastGame }) => (
+              <div
+                key={date}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  padding: '1rem',
+                  background: cardBg,
+                  borderRadius: '8px',
+                  fontSize: 'clamp(0.85rem, 2.2vw, 0.95rem)',
+                  opacity: 0.9,
+                  textAlign: 'center'
+                }}
+              >
+                <div style={{ color: textSecondary, fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                  {format(new Date(date), 'MMM d')}
+                </div>
+                {pastGame ? (
+                  <>
+                    <div style={{ marginBottom: '0.75rem', fontSize: 'clamp(0.9rem, 2.3vw, 1rem)' }}>
+                      {pastGame.title}
+                    </div>
+                    <button
+                      onClick={() => navigate(`/game/${pastGame.gameId}`)}
+                      style={{
+                        background: '#667eea',
+                        border: 'none',
+                        color: 'white',
+                        cursor: 'pointer',
+                        padding: '0.5rem 1rem',
+                        fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+                        borderRadius: '6px',
+                        width: '100%'
+                      }}
+                    >
+                      Play
+                    </button>
+                  </>
+                ) : (
+                  <span style={{ color: textSecondary, fontStyle: 'italic' }}>No game available</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
