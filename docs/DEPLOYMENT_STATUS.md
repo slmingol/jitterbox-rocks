@@ -178,7 +178,7 @@ docker compose exec backend npm run seed
 - `docker-compose.dev.yml` - Development with hot reload
 - `Dockerfile.backend` - Backend multi-stage build
 - `Dockerfile.frontend` - Frontend with Nginx
-- `docker-start.sh` - Helper script with version management
+- `scripts/docker-start.sh` - Helper script with version management
 
 ---
 
@@ -308,7 +308,7 @@ jitterbox-rocks/
 ├── docker-compose.dev.yml     # Development Docker setup
 ├── Dockerfile.backend
 ├── Dockerfile.frontend
-├── docker-start.sh
+├── scripts/docker-start.sh
 ├── package.json               # Root package (version source)
 ├── README.md
 ├── DOCKER_GUIDE.md

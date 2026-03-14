@@ -43,7 +43,7 @@ cd jitterbox-rocks
 chmod +x setup.sh
 
 # Run setup
-./setup.sh
+./scripts/setup.sh
 
 # Start MongoDB (in a separate terminal)
 mongod --dbpath ~/data/db

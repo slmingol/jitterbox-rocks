@@ -20,7 +20,7 @@ The application consists of three containerized services:
 ### Using the Helper Script (Easiest)
 
 ```bash
-./docker-start.sh
+./scripts/docker-start.sh
 ```
 
 Select:

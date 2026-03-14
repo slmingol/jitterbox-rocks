@@ -155,7 +155,7 @@ The system comes with 25 unique games covering diverse music genres:
 cd ~/dev/projects/jitterbox-rocks
 
 # Option 1: Automated setup
-./setup.sh
+./scripts/setup.sh
 
 # Option 2: Manual setup
 npm run install-all

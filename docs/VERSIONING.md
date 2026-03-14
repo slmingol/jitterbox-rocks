@@ -44,7 +44,7 @@ The version is automatically picked up from `package.json` by:
 
 ```bash
 # Docker will automatically use the new version
-./docker-start.sh
+./scripts/docker-start.sh
 ```
 
 ### 3. Docker Image Tags

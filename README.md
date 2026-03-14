@@ -21,7 +21,7 @@ A comprehensive music trivia game featuring daily challenges, practice mode, and
 - **User Statistics**: Comprehensive tracking of performance
 - **Admin Interface**: Create and manage games
 - **No Time Limits**: Take as long as you need to answer
-- **⌨️ Keyboard Navigation**: Full keyboard support for faster gameplay (see [KEYBOARD_SHORTCUTS.md](KEYBOARD_SHORTCUTS.md))
+- **⌨️ Keyboard Navigation**: Full keyboard support for faster gameplay (see [KEYBOARD_SHORTCUTS.md](docs/KEYBOARD_SHORTCUTS.md))
 
 ## Tech Stack
 
@@ -32,14 +32,14 @@ A comprehensive music trivia game featuring daily challenges, practice mode, and
 
 ## Getting Started
 
-📖 **[See DOCKER_GUIDE.md for detailed Docker documentation](DOCKER_GUIDE.md)**
+📖 **[See DOCKER_GUIDE.md for detailed Docker documentation](docs/DOCKER_GUIDE.md)**
 
 ### Option 1: Docker (Recommended)
 
 The easiest way to run the application with all dependencies:
 
 ```bash
-./docker-start.sh
+./scripts/docker-start.sh
 ```
 
 Choose production mode (1) for optimized builds or development mode (2) for hot reload.
