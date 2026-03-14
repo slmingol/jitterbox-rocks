@@ -76,13 +76,31 @@ const Home: React.FC = () => {
               position: 'absolute',
               top: '0.5rem',
               right: '0.5rem',
-              background: 'transparent',
-              border: 'none',
+              background: 'var(--card-bg)',
+              border: '2px solid var(--primary-color)',
               fontSize: 'clamp(1.2rem, 3vw, 1.35rem)',
               cursor: 'pointer',
-              color: 'var(--text-tertiary)',
+              color: 'var(--primary-color)',
               padding: '0.25rem',
               lineHeight: 1,
+              width: '2rem',
+              height: '2rem',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--primary-color)';
+              e.currentTarget.style.color = 'white';
+              e.currentTarget.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'var(--card-bg)';
+              e.currentTarget.style.color = 'var(--primary-color)';
+              e.currentTarget.style.transform = 'scale(1)';
             }}
             title="Dismiss"
           >
