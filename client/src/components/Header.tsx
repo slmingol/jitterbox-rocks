@@ -71,7 +71,7 @@ const Header: React.FC = () => {
         <div className="header-top-row">
           <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', maxWidth: '100%', flex: 1 }}>
             <img 
-              src="/logo.png" 
+              src="/logo-cat-music-transparent.png" 
               alt="Jitterbox Rocks" 
               style={{ 
                 height: '40px', 

@@ -91,7 +91,7 @@ const Home: React.FC = () => {
 
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'clamp(1rem, 3vw, 1.8rem)' }}>
             <img 
-              src="/logo.png" 
+              src="/logo-cat-music-transparent.png" 
               alt="Jitterbox Rocks" 
               style={{ 
                 width: '100%',
