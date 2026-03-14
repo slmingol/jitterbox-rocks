@@ -4,7 +4,7 @@
 
 # Jitterbox Rocks
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/slmingol/jitterbox-rocks)
+[![Version](https://img.shields.io/badge/version-1.4.3-blue.svg)](https://github.com/slmingol/jitterbox-rocks)
 [![Docker](https://img.shields.io/badge/docker-ready-brightgreen.svg)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/license-ISC-green.svg)](LICENSE)
 [![React](https://img.shields.io/badge/react-18.x-61dafb.svg)](https://reactjs.org/)
