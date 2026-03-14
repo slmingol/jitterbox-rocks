@@ -91,9 +91,9 @@ const Home: React.FC = () => {
 
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'clamp(1rem, 3vw, 1.8rem)' }}>
             <picture>
-              <source srcSet="/logo-welcome.webp" type="image/webp" />
+              <source srcSet="/logo-original-optimized.webp" type="image/webp" />
               <img 
-                src="/logo-welcome.png" 
+                src="/logo-original-optimized.png" 
                 alt="Jitterbox Rocks" 
                 style={{ 
                   width: '100%',
