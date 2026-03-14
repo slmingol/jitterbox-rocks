@@ -37,7 +37,7 @@ const Header: React.FC = () => {
   };
 
   const handleResetAccount = () => {
-    if (window.confirm('Are you sure you want to reset your account? This will create a new user with a fresh username and reset all your stats.')) {
+    if (window.confirm('Are you sure you want to reset your stats? This will clear all your progress and start fresh.')) {
       localStorage.removeItem('musicTriviaUser');
       setUser(null);
       setShowUserMenu(false);
@@ -94,7 +94,9 @@ const Header: React.FC = () => {
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
               >
-                <span className="user-button-text">👤 {user?.username || 'Loading...'}</span>
+                <span className="user-button-text">
+                  {user?.username ? `👤 ${user.username}` : '👤 Player'}
+                </span>
                 <span style={{ fontSize: '0.7rem' }}>{showUserMenu ? '▲' : '▼'}</span>
               </button>
               
@@ -120,7 +122,7 @@ const Header: React.FC = () => {
                       <form onSubmit={handleUsernameSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                         <input
                           type="text"
-                          placeholder="New username"
+                          placeholder="Enter your username"
                           value={newUsername}
                           onChange={(e) => setNewUsername(e.target.value)}
                           className="text-input"
@@ -168,7 +170,7 @@ const Header: React.FC = () => {
                       }}
                     >
                       <span>✏️</span>
-                      <span>Change Username</span>
+                      <span>{user?.username ? 'Change Username' : 'Set Username'}</span>
                     </button>
                   )}
                   
@@ -248,7 +250,7 @@ const Header: React.FC = () => {
                       }}
                     >
                       <span>🔄</span>
-                      <span>Reset Account</span>
+                      <span>Reset Stats</span>
                     </button>
                   </div>
                 </div>

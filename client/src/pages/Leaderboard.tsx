@@ -104,7 +104,7 @@ const Leaderboard: React.FC = () => {
 
                 <div style={{ flex: 1 }}>
                   <div className="leaderboard-name">
-                    {player.username}
+                    {player.username || 'Anonymous Player'}
                     {isCurrentUser && (
                       <span
                         style={{
