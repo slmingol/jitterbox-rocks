@@ -116,22 +116,35 @@ const GamePlay: React.FC = () => {
             prev > 0 ? prev - 1 : suggestions.length - 1
           );
           return;
-        } else if (e.key === 'Tab' || e.key === 'Enter') {
+        } else if (e.key === 'Tab') {
+          // Tab always selects a suggestion if available
           e.preventDefault();
           if (selectedSuggestionIndex >= 0 && suggestions[selectedSuggestionIndex]) {
             setUserAnswer(suggestions[selectedSuggestionIndex]);
-            setShowSuggestions(false);
-            setSelectedSuggestionIndex(-1);
-            textInputRef.current?.focus();
           } else if (suggestions.length > 0) {
-            // If no item is selected but there are suggestions, select the first one
             setUserAnswer(suggestions[0]);
-            setShowSuggestions(false);
-            setSelectedSuggestionIndex(-1);
-            textInputRef.current?.focus();
           }
+          setShowSuggestions(false);
+          setSelectedSuggestionIndex(-1);
+          textInputRef.current?.focus();
+          return;
+        } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
+          // Enter only selects if a suggestion is explicitly highlighted
+          e.preventDefault();
+          setUserAnswer(suggestions[selectedSuggestionIndex]);
+          setShowSuggestions(false);
+          setSelectedSuggestionIndex(-1);
+          textInputRef.current?.focus();
           return;
         }
+      }
+
+      // Handle Escape key for autocomplete
+      if (e.key === 'Escape' && showSuggestions) {
+        e.preventDefault();
+        setShowSuggestions(false);
+        setSelectedSuggestionIndex(-1);
+        return;
       }
 
       // Prevent keyboard shortcuts when typing in text input (except Enter, Escape, and S)
