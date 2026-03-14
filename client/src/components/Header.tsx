@@ -68,34 +68,24 @@ const Header: React.FC = () => {
   return (
     <header className="header">
       <div className="header-content">
-        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', maxWidth: '100%' }}>
-          <img 
-            src="/logo.png" 
-            alt="Jitterbox Rocks" 
-            style={{ 
-              height: '40px', 
-              maxHeight: '50px',
-              width: 'auto',
-              maxWidth: '50px',
-              objectFit: 'contain',
-              flexShrink: 0
-            }} 
-          />
-          <h1 style={{ margin: 0, fontSize: 'clamp(1.2rem, 4vw, 1.8rem)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Jitterbox Rocks</h1>
-        </Link>
-        
-        <nav>
-          <ul className="nav-links">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/daily"><span className="nav-full">Daily Game</span><span className="nav-short">Daily</span></Link></li>
-            <li><Link to="/practice">Practice</Link></li>
-            <li><Link to="/leaderboard"><span className="nav-full">Leaderboard</span><span className="nav-short">Board</span></Link></li>
-            {user && <li><Link to="/stats"><span className="nav-full">My Stats</span><span className="nav-short">Stats</span></Link></li>}
-            <li><Link to="/admin">Admin</Link></li>
-          </ul>
-        </nav>
-
-        <div className="user-info">
+        <div className="header-top-row">
+          <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', maxWidth: '100%', flex: 1 }}>
+            <img 
+              src="/logo.png" 
+              alt="Jitterbox Rocks" 
+              style={{ 
+                height: '40px', 
+                maxHeight: '50px',
+                width: 'auto',
+                maxWidth: '50px',
+                objectFit: 'contain',
+                flexShrink: 0
+              }} 
+            />
+            <h1 style={{ margin: 0, fontSize: 'clamp(1.2rem, 4vw, 1.8rem)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Jitterbox Rocks</h1>
+          </Link>
+          
+          <div className="user-info">
           {user ? (
             <div ref={menuRef} style={{ position: 'relative' }}>
               <button 
@@ -103,7 +93,7 @@ const Header: React.FC = () => {
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
               >
-                <span>👤 {user.username}</span>
+                <span className="user-button-text">👤 {user.username}</span>
                 <span style={{ fontSize: '0.7rem' }}>{showUserMenu ? '▲' : '▼'}</span>
               </button>
               
@@ -229,6 +219,18 @@ const Header: React.FC = () => {
             </>
           )}
         </div>
+        </div>
+        
+        <nav>
+          <ul className="nav-links">
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/daily"><span className="nav-full">Daily Game</span><span className="nav-short">Daily</span></Link></li>
+            <li><Link to="/practice">Practice</Link></li>
+            <li><Link to="/leaderboard"><span className="nav-full">Leaderboard</span><span className="nav-short">Board</span></Link></li>
+            {user && <li><Link to="/stats"><span className="nav-full">My Stats</span><span className="nav-short">Stats</span></Link></li>}
+            <li><Link to="/admin">Admin</Link></li>
+          </ul>
+        </nav>
       </div>
     </header>
   );

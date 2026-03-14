@@ -108,6 +108,10 @@ body {
   align-items: center;
 }
 
+.header-top-row {
+  display: contents;
+}
+
 .header h1 {
   color: var(--primary-color);
   font-size: 1.8rem;
@@ -538,10 +542,28 @@ input[type="search"]:-webkit-autofill,
   .header-content {
     flex-direction: column;
     gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .header-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
   }
 
   .header h1 {
     font-size: 1.3rem;
+  }
+
+  /* Make user button smaller on mobile */
+  .user-info .btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .user-button-text {
+    font-size: 0.85rem;
   }
 
   .nav-links {
@@ -578,8 +600,8 @@ input[type="search"]:-webkit-autofill,
   }
 
   .user-info {
-    width: 100%;
-    justify-content: center;
+    width: auto;
+    justify-content: flex-end;
   }
 
   /* Grid Layouts */
@@ -744,6 +766,16 @@ input[type="search"]:-webkit-autofill,
   .btn {
     padding: 0.5rem 0.85rem;
     font-size: 0.9rem;
+  }
+
+  /* Make user button even smaller on very small screens */
+  .user-info .btn {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .user-button-text {
+    font-size: 0.8rem;
   }
 
   .score-value {
