@@ -32,12 +32,12 @@ export class QuestionGenerator {
    * Create question object
    */
   private createQuestion(
-    type: 'multiple-choice' | 'audio' | 'text-input',
+    type: 'multiple-choice',
     question: string,
     correctAnswer: string,
     category: string,
     difficulty: 'easy' | 'medium' | 'hard',
-    options?: string[],
+    options: string[],
     hint?: string
   ): IQuestion | null {
     if (!this.isUnique(question, correctAnswer)) {
@@ -128,18 +128,11 @@ export class QuestionGenerator {
   }
 
   /**
-   * Generate text-input artist questions
+   * Generate alternative who sang question (removed text-input version)
    */
   generateArtistTextQuestion(song: BillboardSong): IQuestion | null {
-    return this.createQuestion(
-      'text-input',
-      `Who performed "${song.title}"?`,
-      song.artist,
-      this.getCategoryForYear(song.year),
-      'easy',
-      undefined,
-      song.year >= 2000 ? 'A modern hit' : song.year >= 1980 ? 'An 80s/90s classic' : 'A classic track'
-    );
+    // Convert to multiple-choice with similar artists as distractors
+    return null; // Handled by generateWhoSangQuestion instead
   }
 
   /**
@@ -176,22 +169,11 @@ export class QuestionGenerator {
   }
 
   /**
-   * Generate fact-based questions
+   * Generate fact-based questions (removed - text-input not supported)
    */
   generateFactQuestion(song: BillboardSong): IQuestion | null {
-    if (!song.facts || song.facts.length === 0) return null;
-
-    const fact = song.facts[Math.floor(Math.random() * song.facts.length)];
-    
-    // Create true/false or fill-in-the-blank based on fact structure
-    // This is a simplified version - you'd want more sophisticated fact parsing
-    return this.createQuestion(
-      'text-input',
-      `${fact.replace(/\..*$/, '')}?`, // Convert statement to question
-      song.title,
-      'Music Trivia',
-      'hard'
-    );
+    // Removed text-input question type
+    return null;
   }
 
   /**
@@ -237,20 +219,11 @@ export class QuestionGenerator {
   }
 
   /**
-   * Generate artist trivia from artist info
+   * Generate artist trivia from artist info (removed - text-input not supported)
    */
   generateArtistTriviaQuestion(artist: ArtistInfo, songs: BillboardSong[]): IQuestion | null {
-    if (!artist.facts || artist.facts.length === 0) return null;
-
-    const fact = artist.facts[Math.floor(Math.random() * artist.facts.length)];
-    
-    return this.createQuestion(
-      'text-input',
-      fact,
-      artist.name,
-      'Artist Trivia',
-      'medium'
-    );
+    // Removed text-input question type
+    return null;
   }
 
   /**
@@ -291,10 +264,9 @@ export class QuestionGenerator {
         s.artist !== song.artist
       );
 
-      // Try different question types
+      // Try different question types (all multiple-choice)
       const generators = [
         () => this.generateWhoSangQuestion(song, this.shuffle(sameEra.map(s => s.artist)).slice(0, 3)),
-        () => this.generateArtistTextQuestion(song),
         () => this.generateDecadeQuestion(song),
         () => song.peakPosition === 1 ? this.generateNumberOneQuestion(song, this.shuffle(sameEra.map(s => s.title)).slice(0, 3)) : null,
         () => this.generateAlbumQuestion(song, this.shuffle(allSongs.filter(s => s.album).map(s => s.album!)).slice(0, 3)),

@@ -1,9 +1,8 @@
 export interface Question {
-  type: 'multiple-choice' | 'audio' | 'text-input';
+  type: 'multiple-choice';
   question: string;
   correctAnswer: string;
-  options?: string[];
-  audioUrl?: string;
+  options: string[];
   hint?: string;
   difficulty: 'easy' | 'medium' | 'hard';
   category: string;
@@ -69,8 +68,6 @@ export interface UserStats {
   };
   questionTypeStats: {
     'multiple-choice': { attempted: number; correct: number; accuracy: number };
-    'audio': { attempted: number; correct: number; accuracy: number };
-    'text-input': { attempted: number; correct: number; accuracy: number };
   };
 }
 

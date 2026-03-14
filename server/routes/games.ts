@@ -4,7 +4,6 @@ import gameController from '../controllers/gameController';
 const router = Router();
 
 // Public routes
-router.get('/autocomplete', gameController.getAutocompleteSuggestions.bind(gameController));
 router.get('/themes', gameController.getAllThemes.bind(gameController));
 router.get('/daily', gameController.getDailyGame.bind(gameController));
 router.get('/random', gameController.getRandomGame.bind(gameController));

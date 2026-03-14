@@ -7,7 +7,6 @@ import './config/sqlite'; // Initialize SQLite database
 import gameRoutes from './routes/games';
 import statsRoutes from './routes/stats';
 import adminRoutes from './routes/admin';
-import autocompleteService from './services/autocompleteService';
 
 dotenv.config();
 
@@ -54,9 +53,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Start server (SQLite is already initialized)
 const startServer = async () => {
   try {
-    // Initialize autocomplete service
-    await autocompleteService.initialize();
-    
     app.listen(PORT, () => {
       console.log(`✅ Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);

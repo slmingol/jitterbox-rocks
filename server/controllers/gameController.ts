@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import gameService from '../services/gameService';
-import autocompleteService from '../services/autocompleteService';
 import { IQuestion } from '../models/Game';
 
 export class GameController {
@@ -196,29 +195,6 @@ export class GameController {
       });
     } catch (error) {
       console.error('Error checking answer:', error);
-      res.status(500).json({ message: 'Server error' });
-    }
-  }
-
-  /**
-   * GET /api/games/autocomplete
-   * Get autocomplete suggestions for text input questions
-   */
-  async getAutocompleteSuggestions(req: Request, res: Response) {
-    try {
-      const { query, question } = req.query;
-      
-      if (!query || typeof query !== 'string') {
-        return res.json([]);
-      }
-
-      const suggestions = question && typeof question === 'string'
-        ? autocompleteService.getSmartSuggestions(query, question, 10)
-        : autocompleteService.getSuggestions(query, 10).artists;
-
-      res.json(suggestions);
-    } catch (error) {
-      console.error('Error getting autocomplete suggestions:', error);
       res.status(500).json({ message: 'Server error' });
     }
   }

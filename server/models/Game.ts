@@ -1,11 +1,10 @@
 // TypeScript interfaces for SQLite-based music trivia game
 
 export interface IQuestion {
-  type: 'multiple-choice' | 'audio' | 'text-input';
+  type: 'multiple-choice';
   question: string;
   correctAnswer: string;
-  options?: string[]; // For multiple choice
-  audioUrl?: string; // For audio questions
+  options: string[]; // Multiple choice options (required)
   hint?: string;
   difficulty: 'easy' | 'medium' | 'hard';
   category: string; // e.g., 'Rock', 'Pop', '80s', 'Artist Name', etc.
