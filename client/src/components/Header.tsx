@@ -74,10 +74,9 @@ const Header: React.FC = () => {
               src="/logo-cat-music-transparent.png" 
               alt="Jitterbox Rocks" 
               style={{ 
-                height: '40px', 
-                maxHeight: '50px',
+                height: '60px', 
+                maxHeight: '60px',
                 width: 'auto',
-                maxWidth: '50px',
                 objectFit: 'contain',
                 flexShrink: 0
               }} 
