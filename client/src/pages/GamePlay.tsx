@@ -28,6 +28,7 @@ const GamePlay: React.FC = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Refs for keyboard handler to access current state without re-creating the listener
   const stateRef = useRef({
@@ -92,6 +93,15 @@ const GamePlay: React.FC = () => {
       }
     }
   }, [currentQuestionIndex, game]);
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   // Keyboard navigation
   useEffect(() => {
@@ -209,8 +219,8 @@ const GamePlay: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []); // Empty deps - using stateRef to access current values
 
-  // Fetch autocomplete suggestions
-  const fetchAutocompleteSuggestions = async (query: string, questionText: string) => {
+  // Fetch autocomplete suggestions with debouncing
+  const fetchAutocompleteSuggestions = useCallback(async (query: string, questionText: string) => {
     if (!query || query.length < 2) {
       setSuggestions([]);
       setShowSuggestions(false);
@@ -219,12 +229,23 @@ const GamePlay: React.FC = () => {
 
     setLoadingSuggestions(true);
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/games/autocomplete?query=${encodeURIComponent(query)}&question=${encodeURIComponent(questionText)}`
-      );
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+      const url = `${apiUrl}/games/autocomplete?query=${encodeURIComponent(query)}&question=${encodeURIComponent(questionText)}`;
+      
+      console.log('Fetching autocomplete suggestions:', url);
+      
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
-      setSuggestions(Array.isArray(data) ? data : []);
-      setShowSuggestions(data.length > 0);
+      console.log('Autocomplete data received:', data);
+      
+      const suggestionList = Array.isArray(data) ? data : [];
+      setSuggestions(suggestionList);
+      setShowSuggestions(suggestionList.length > 0);
       setSelectedSuggestionIndex(-1);
     } catch (error) {
       console.error('Error fetching suggestions:', error);
@@ -233,18 +254,28 @@ const GamePlay: React.FC = () => {
     } finally {
       setLoadingSuggestions(false);
     }
-  };
+  }, []);
 
-  // Handle text input change with autocomplete
-  const handleTextInputChange = (value: string, questionText: string) => {
+  // Handle text input change with autocomplete (debounced)
+  const handleTextInputChange = useCallback((value: string, questionText: string) => {
     setUserAnswer(value);
+    
+    // Clear existing timeout
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    
     if (value.length >= 2) {
-      fetchAutocompleteSuggestions(value, questionText);
+      // Debounce the API call by 300ms
+      debounceTimerRef.current = setTimeout(() => {
+        fetchAutocompleteSuggestions(value, questionText);
+      }, 300);
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
+      setSelectedSuggestionIndex(-1);
     }
-  };
+  }, [fetchAutocompleteSuggestions]);
 
   // Select a suggestion
   const selectSuggestion = (suggestion: string) => {
