@@ -1,14 +1,13 @@
 import { getDb } from '../config/sqlite';
 
 export interface IQuestion {
-  type: 'multiple-choice' | 'audio' | 'text-input';
+  type: 'multiple-choice';
   question: string;
   category: string;
   difficulty: 'easy' | 'medium' | 'hard';
   points: number;
   correctAnswer: string;
-  options?: string[];
-  audioUrl?: string;
+  options: string[];
 }
 
 export interface IGame {
