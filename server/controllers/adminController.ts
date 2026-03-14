@@ -423,12 +423,20 @@ export class AdminController {
    */
   async importDatabase(req: Request, res: Response) {
     try {
+      console.log('📤 Import request received');
+      console.log('  File:', req.file ? `${req.file.originalname} (${req.file.size} bytes)` : 'No file');
+      
       if (!req.file) {
+        console.log('❌ No file uploaded');
         return res.status(400).json({ message: 'No file uploaded' });
       }
 
       const uploadedFile = req.file.path;
       const backupPath = `${dbPath}.backup-${Date.now()}`;
+
+      console.log('  Uploaded to:', uploadedFile);
+      console.log('  Target DB path:', dbPath);
+      console.log('  Backup path:', backupPath);
 
       // Create backup of current database
       if (fs.existsSync(dbPath)) {
@@ -442,6 +450,7 @@ export class AdminController {
         console.log(`✅ Imported new database from ${uploadedFile}`);
 
         // Reload database connection
+        console.log('🔄 Reloading database connection...');
         const reloaded = reloadDatabase();
         
         if (!reloaded) {
@@ -450,28 +459,33 @@ export class AdminController {
 
         // Clean up uploaded file
         fs.unlinkSync(uploadedFile);
+        console.log('✅ Cleaned up temp file');
 
         // Verify new database by trying to read games
+        console.log('🔍 Verifying database...');
         const games = GameRepository.findAll();
+        console.log(`✅ Database verified: ${games.length} games found`);
         
         res.json({
           message: 'Database imported successfully',
           games: games.length,
           backup: backupPath
         });
-      } catch (error) {
+      } catch (error: any) {
         // Restore from backup on error
+        console.error('❌ Import error:', error.message);
         if (fs.existsSync(backupPath)) {
           fs.copyFileSync(backupPath, dbPath);
           reloadDatabase();
-          console.log('❌ Import failed, restored from backup');
+          console.log('🔄 Restored from backup');
         }
         throw error;
       }
     } catch (error: any) {
-      console.error('Error importing database:', error);
+      console.error('❌ Error importing database:', error);
       res.status(500).json({ 
-        message: error.message || 'Error importing database' 
+        message: error.message || 'Error importing database',
+        error: error.toString()
       });
     }
   }
