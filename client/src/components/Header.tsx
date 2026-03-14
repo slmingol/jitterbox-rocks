@@ -6,9 +6,7 @@ import { useTheme } from '../context/ThemeContext';
 const Header: React.FC = () => {
   const { user, setUser, updateUsername } = useUser();
   const { theme, setTheme } = useTheme();
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const [editingUsername, setEditingUsername] = useState(false);
-  const [newUsername, setNewUsername] = useState('');
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -16,39 +14,28 @@ const Header: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowUserMenu(false);
-        setEditingUsername(false);
+        setShowSettingsMenu(false);
       }
     };
 
-    if (showUserMenu) {
+    if (showSettingsMenu) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [showUserMenu]);
+  }, [showSettingsMenu]);
 
-  const handleUsernameSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newUsername.trim()) {
-      updateUsername(newUsername.trim());
-      setEditingUsername(false);
-      setNewUsername('');
-    }
-  };
-
-  const handleResetAccount = () => {
+  const handleResetStats = () => {
     if (window.confirm('Are you sure you want to reset your stats? This will clear all your progress and start fresh.')) {
       localStorage.removeItem('musicTriviaUser');
       setUser(null);
-      setShowUserMenu(false);
-      // Force page reload to generate new user
+      setShowSettingsMenu(false);
       window.location.reload();
     }
   };
 
   const handleShowHelp = () => {
     localStorage.removeItem('howToPlayDismissed');
-    setShowUserMenu(false);
+    setShowSettingsMenu(false);
     navigate('/');
     // Small delay to ensure navigation happens before reload
     setTimeout(() => {
@@ -91,16 +78,15 @@ const Header: React.FC = () => {
             <div ref={menuRef} style={{ position: 'relative' }}>
               <button 
                 className="btn btn-outline" 
-                onClick={() => setShowUserMenu(!showUserMenu)}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                onClick={() => setShowSettingsMenu(!showSettingsMenu)}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0.75rem' }}
+                title="Settings"
               >
-                <span className="user-button-text">
-                  {user?.username ? `👤 ${user.username}` : '👤 Player'}
-                </span>
-                <span style={{ fontSize: '0.7rem' }}>{showUserMenu ? '▲' : '▼'}</span>
+                <span style={{ fontSize: '1.2rem' }}>⚙️</span>
+                <span style={{ fontSize: '0.7rem' }}>{showSettingsMenu ? '▲' : '▼'}</span>
               </button>
               
-              {showUserMenu && (
+              {showSettingsMenu && (
                 <div 
                   className="user-menu-dropdown"
                   style={{
@@ -116,64 +102,6 @@ const Header: React.FC = () => {
                     overflow: 'hidden',
                   }}
                 >
-                  {/* Username Section */}
-                  {editingUsername ? (
-                    <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border-color)' }}>
-                      <form onSubmit={handleUsernameSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <input
-                          type="text"
-                          placeholder="Enter your username"
-                          value={newUsername}
-                          onChange={(e) => setNewUsername(e.target.value)}
-                          className="text-input"
-                          style={{ padding: '0.5rem', fontSize: '0.9rem', width: '100%' }}
-                          autoFocus
-                        />
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                          <button type="submit" className="btn btn-primary" style={{ flex: 1, padding: '0.4rem', fontSize: '0.85rem' }}>
-                            Save
-                          </button>
-                          <button 
-                            type="button" 
-                            className="btn btn-outline" 
-                            style={{ flex: 1, padding: '0.4rem', fontSize: '0.85rem' }}
-                            onClick={() => {
-                              setEditingUsername(false);
-                              setNewUsername('');
-                            }}
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setEditingUsername(true);
-                        setNewUsername(user?.username || '');
-                      }}
-                      className="user-menu-item"
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem 1rem',
-                        border: 'none',
-                        background: 'transparent',
-                        color: 'var(--text-primary)',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        fontSize: '0.95rem',
-                        borderBottom: '1px solid var(--border-color)',
-                      }}
-                    >
-                      <span>✏️</span>
-                      <span>{user?.username ? 'Change Username' : 'Set Username'}</span>
-                    </button>
-                  )}
-                  
                   {/* Theme Section */}
                   <div style={{ 
                     padding: '0.5rem 1rem', 
@@ -233,7 +161,7 @@ const Header: React.FC = () => {
                     </button>
                     
                     <button
-                      onClick={handleResetAccount}
+                      onClick={handleResetStats}
                       className="user-menu-item"
                       style={{
                         width: '100%',
