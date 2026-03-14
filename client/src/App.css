@@ -695,7 +695,11 @@ input[type="search"]:-webkit-autofill,
     flex-wrap: wrap;
   }
 
-  /* Keyboard shortcuts hints - make smaller on mobile */
+  /* Hide keyboard shortcuts hints on mobile */
+  .keyboard-shortcuts-hint {
+    display: none !important;
+  }
+
   kbd {
     padding: 0.1rem 0.25rem !important;
     font-size: 0.75em !important;

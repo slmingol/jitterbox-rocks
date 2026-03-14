@@ -510,7 +510,7 @@ const GamePlay: React.FC = () => {
           {currentQuestion.type === 'multiple-choice' && (
             <>
               {!showResult && (
-                <div style={{ 
+                <div className="keyboard-shortcuts-hint" style={{ 
                   background: '#f0f4ff', 
                   padding: '0.75rem', 
                   borderRadius: '8px', 
@@ -597,7 +597,7 @@ const GamePlay: React.FC = () => {
                 )}
               </div>
               {!showResult && (
-                <div style={{ 
+                <div className="keyboard-shortcuts-hint" style={{ 
                   background: '#f0f4ff', 
                   padding: '0.75rem', 
                   borderRadius: '8px', 
@@ -692,7 +692,7 @@ const GamePlay: React.FC = () => {
                         {suggestion}
                       </div>
                     ))}
-                    <div style={{
+                    <div className="keyboard-shortcuts-hint" style={{
                       padding: '0.5rem',
                       fontSize: '0.75rem',
                       color: '#999',
@@ -712,7 +712,7 @@ const GamePlay: React.FC = () => {
           {currentQuestion.type === 'text-input' && (
             <>
               {!showResult && (
-                <div style={{ 
+                <div className="keyboard-shortcuts-hint" style={{ 
                   background: '#f0f4ff', 
                   padding: '0.75rem', 
                   borderRadius: '8px', 
@@ -807,7 +807,7 @@ const GamePlay: React.FC = () => {
                         {suggestion}
                       </div>
                     ))}
-                    <div style={{
+                    <div className="keyboard-shortcuts-hint" style={{
                       padding: '0.5rem',
                       fontSize: '0.75rem',
                       color: '#999',
@@ -870,7 +870,7 @@ const GamePlay: React.FC = () => {
                 <button className="btn btn-primary" onClick={handleNextQuestion}>
                   {currentQuestionIndex < game.questions.length - 1 ? 'Next Question' : 'Finish Game'}
                 </button>
-                <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                <div className="keyboard-shortcuts-hint" style={{ fontSize: '0.9rem', color: '#666' }}>
                   Press <kbd style={{ 
                     padding: '0.2rem 0.5rem', 
                     background: '#f5f5f5', 
