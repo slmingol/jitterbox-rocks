@@ -7,7 +7,7 @@ const Header: React.FC = () => {
   const { user, setUser, updateUsername } = useUser();
   const { theme, setTheme } = useTheme();
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLLIElement>(null);
   const navigate = useNavigate();
 
   // Close menu when clicking outside
@@ -59,7 +59,7 @@ const Header: React.FC = () => {
     <header className="header">
       <div className="header-content">
         <div className="header-top-row">
-          <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', maxWidth: '100%', flex: 1 }}>
+          <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <img 
               src="/logo-cat-music-transparent.png" 
               alt="Jitterbox Rocks" 
@@ -73,9 +73,17 @@ const Header: React.FC = () => {
             />
             <h1 style={{ margin: 0, fontSize: 'clamp(1.2rem, 4vw, 1.8rem)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Jitterbox Rocks</h1>
           </Link>
-          
-          <div className="user-info">
-            <div ref={menuRef} style={{ position: 'relative' }}>
+        </div>
+        
+        <nav>
+          <ul className="nav-links">
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/daily"><span className="nav-full">Daily Game</span><span className="nav-short">Daily</span></Link></li>
+            <li><Link to="/practice">Practice</Link></li>
+            <li><Link to="/leaderboard"><span className="nav-full">Leaderboard</span><span className="nav-short">Board</span></Link></li>
+            <li><Link to="/stats"><span className="nav-full">My Stats</span><span className="nav-short">Stats</span></Link></li>
+            <li><Link to="/admin">Admin</Link></li>
+            <li ref={menuRef} style={{ position: 'relative' }}>
               <button 
                 className="btn btn-outline" 
                 onClick={() => setShowSettingsMenu(!showSettingsMenu)}
@@ -183,18 +191,7 @@ const Header: React.FC = () => {
                   </div>
                 </div>
               )}
-            </div>
-        </div>
-        </div>
-        
-        <nav>
-          <ul className="nav-links">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/daily"><span className="nav-full">Daily Game</span><span className="nav-short">Daily</span></Link></li>
-            <li><Link to="/practice">Practice</Link></li>
-            <li><Link to="/leaderboard"><span className="nav-full">Leaderboard</span><span className="nav-short">Board</span></Link></li>
-            <li><Link to="/stats"><span className="nav-full">My Stats</span><span className="nav-short">Stats</span></Link></li>
-            <li><Link to="/admin">Admin</Link></li>
+            </li>
           </ul>
         </nav>
       </div>

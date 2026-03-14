@@ -7,6 +7,7 @@ import './config/sqlite'; // Initialize SQLite database
 import gameRoutes from './routes/games';
 import statsRoutes from './routes/stats';
 import adminRoutes from './routes/admin';
+import { dailyGameScheduler } from './services/dailyGameScheduler';
 
 dotenv.config();
 
@@ -57,6 +58,9 @@ const startServer = async () => {
       console.log(`✅ Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`💾 Database: SQLite (music-trivia.db)`);
+      
+      // Start the daily game scheduler
+      dailyGameScheduler.start();
     });
   } catch (error) {
     console.error('Failed to start server:', error);
