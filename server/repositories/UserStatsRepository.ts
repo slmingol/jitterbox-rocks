@@ -1,4 +1,4 @@
-import db from '../config/sqlite';
+import { getDb } from '../config/sqlite';
 
 export interface IUserStats {
   username: string;
@@ -17,23 +17,23 @@ export interface IUserStats {
 export class UserStatsRepository {
   // Create or get user stats
   static findOrCreate(username: string): IUserStats {
-    let user = db.prepare(`
+    let user = getDb().prepare(`
       SELECT * FROM user_stats WHERE username = ?
     `).get(username) as any;
     
     if (!user) {
-      db.prepare(`
+      getDb().prepare(`
         INSERT INTO user_stats (username) VALUES (?)
       `).run(username);
       
-      user = db.prepare(`
+      user = getDb().prepare(`
         SELECT * FROM user_stats WHERE username = ?
       `).get(username) as any;
     }
     
     // Get category stats
     const categoryStats = new Map();
-    const categories = db.prepare(`
+    const categories = getDb().prepare(`
       SELECT category, correct, total FROM category_stats WHERE username = ?
     `).all(username) as any[];
     categories.forEach(c => {
@@ -42,7 +42,7 @@ export class UserStatsRepository {
     
     // Get difficulty stats
     const difficultyStats = new Map();
-    const difficulties = db.prepare(`
+    const difficulties = getDb().prepare(`
       SELECT difficulty, correct, total FROM difficulty_stats WHERE username = ?
     `).all(username) as any[];
     difficulties.forEach(d => {
@@ -51,7 +51,7 @@ export class UserStatsRepository {
     
     // Get question type stats
     const questionTypeStats = new Map();
-    const types = db.prepare(`
+    const types = getDb().prepare(`
       SELECT type, correct, total FROM question_type_stats WHERE username = ?
     `).all(username) as any[];
     types.forEach(t => {
@@ -111,7 +111,7 @@ export class UserStatsRepository {
       fields.push('updated_at = CURRENT_TIMESTAMP');
       values.push(username);
       
-      db.prepare(`
+      getDb().prepare(`
         UPDATE user_stats SET ${fields.join(', ')} WHERE username = ?
       `).run(...values);
     }
@@ -119,7 +119,7 @@ export class UserStatsRepository {
     // Update category stats
     if (updates.categoryStats) {
       updates.categoryStats.forEach((stats, category) => {
-        db.prepare(`
+        getDb().prepare(`
           INSERT INTO category_stats (username, category, correct, total)
           VALUES (?, ?, ?, ?)
           ON CONFLICT(username, category) DO UPDATE SET
@@ -132,7 +132,7 @@ export class UserStatsRepository {
     // Update difficulty stats
     if (updates.difficultyStats) {
       updates.difficultyStats.forEach((stats, difficulty) => {
-        db.prepare(`
+        getDb().prepare(`
           INSERT INTO difficulty_stats (username, difficulty, correct, total)
           VALUES (?, ?, ?, ?)
           ON CONFLICT(username, difficulty) DO UPDATE SET
@@ -145,7 +145,7 @@ export class UserStatsRepository {
     // Update question type stats
     if (updates.questionTypeStats) {
       updates.questionTypeStats.forEach((stats, type) => {
-        db.prepare(`
+        getDb().prepare(`
           INSERT INTO question_type_stats (username, type, correct, total)
           VALUES (?, ?, ?, ?)
           ON CONFLICT(username, type) DO UPDATE SET
@@ -158,7 +158,7 @@ export class UserStatsRepository {
 
   // Get leaderboard
   static getLeaderboard(limit: number = 10): Array<{ username: string; totalPoints: number; totalGamesPlayed: number }> {
-    const users = db.prepare(`
+    const users = getDb().prepare(`
       SELECT username, total_points, total_games_played
       FROM user_stats
       ORDER BY total_points DESC
