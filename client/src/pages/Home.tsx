@@ -132,22 +132,6 @@ const Home: React.FC = () => {
             practice mode, and detailed statistics tracking.
           </p>
 
-          {!user && (
-            <div style={{ 
-              background: 'var(--warning-bg)', 
-              padding: 'clamp(0.75rem, 2vw, 1.125rem)', 
-              borderRadius: '8px', 
-              marginBottom: '1.8rem',
-              display: 'inline-block',
-              maxWidth: '540px',
-              width: '100%'
-            }}>
-              <p style={{ color: 'var(--warning-text)', fontWeight: 600, margin: 0, fontSize: 'clamp(0.9rem, 2vw, 1rem)' }}>
-                👆 Please login with a username to start playing and track your progress!
-              </p>
-            </div>
-          )}
-
           <div style={{ textAlign: 'center', marginTop: '1.8rem' }}>
             <h2 style={{ marginBottom: '1.35rem', color: 'var(--primary-color)', fontSize: 'clamp(1.1rem, 3vw, 1.35rem)' }}>📖 How to Play</h2>
           </div>

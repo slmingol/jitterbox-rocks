@@ -257,18 +257,6 @@ const GamePlay: React.FC = () => {
     );
   }
 
-  if (!user) {
-    return (
-      <div className="card">
-        <h2>Please Login</h2>
-        <p>You need to login to play the game and track your progress.</p>
-        <button className="btn btn-primary" onClick={() => navigate('/')}>
-          Go to Home
-        </button>
-      </div>
-    );
-  }
-
   if (gameCompleted) {
     const accuracy = (correctAnswers / game.questions.length) * 100;
     const timeTaken = Math.floor((Date.now() - gameStartTime) / 1000);
