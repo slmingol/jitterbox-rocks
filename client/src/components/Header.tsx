@@ -87,10 +87,10 @@ const Header: React.FC = () => {
         <nav>
           <ul className="nav-links">
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/daily">Daily Game</Link></li>
+            <li><Link to="/daily"><span className="nav-full">Daily Game</span><span className="nav-short">Daily</span></Link></li>
             <li><Link to="/practice">Practice</Link></li>
-            <li><Link to="/leaderboard">Leaderboard</Link></li>
-            {user && <li><Link to="/stats">My Stats</Link></li>}
+            <li><Link to="/leaderboard"><span className="nav-full">Leaderboard</span><span className="nav-short">Board</span></Link></li>
+            {user && <li><Link to="/stats"><span className="nav-full">My Stats</span><span className="nav-short">Stats</span></Link></li>}
             <li><Link to="/admin">Admin</Link></li>
           </ul>
         </nav>
