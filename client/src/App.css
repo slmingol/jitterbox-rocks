@@ -148,7 +148,7 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-right: 30px;
+  margin-left: 30px;
 }
 
 .user-name {
