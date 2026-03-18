@@ -161,6 +161,7 @@ All services communicate via the `music-trivia-network` bridge network:
 ### Frontend
 - Checks Nginx is responding on port 80
 - Every 30 seconds
+- Uses `http://127.0.0.1:80` for the probe (preferred over `localhost` to avoid IPv6 loopback resolution issues)
 
 ### MongoDB
 - Uses `mongosh` ping command
@@ -189,6 +190,23 @@ docker compose ps
 
 # Restart specific service
 docker compose restart backend
+```
+
+### Frontend Marked Unhealthy (but Nginx is running)
+
+If the frontend container is running but health checks fail with `wget: can't connect to remote host: Connection refused`, the probe may be hitting IPv6 `localhost` (`::1`) while Nginx is only listening on IPv4.
+
+Use `127.0.0.1` in the frontend healthcheck:
+
+```yaml
+healthcheck:
+   test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:80"]
+```
+
+Then recreate the frontend container:
+
+```bash
+docker compose up -d --force-recreate frontend
 ```
 
 ### Database Connection Issues
