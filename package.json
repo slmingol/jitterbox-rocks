@@ -1,6 +1,6 @@
 {
   "name": "jitterbox-rocks",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "description": "A comprehensive music trivia game with daily challenges and practice mode",
   "main": "index.js",
   "scripts": {
