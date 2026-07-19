@@ -79,6 +79,7 @@ jobs:
     steps:
       - name: Cleanup old ${{ matrix.image }} images
         uses: actions/delete-package-versions@v5
+        continue-on-error: true
         with:
           package-name: 'jitterbox-rocks-${{ matrix.image }}'
           package-type: 'container'
