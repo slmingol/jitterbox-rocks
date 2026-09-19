@@ -27,6 +27,22 @@
       "description": "uuid v9 bundles its own types; @types/uuid v11 is an empty stub that breaks compilation"
     },
     {
+      "matchPackageNames": ["uuid"],
+      "allowedVersions": "<12.0.0",
+      "description": "pinned to v11; v12+ untested"
+    },
+    {
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7.0.0",
+      "description": "typescript v7 breaks CI"
+    },
+    {
+      "matchDepNames": ["node"],
+      "matchManagers": ["dockerfile"],
+      "allowedVersions": "<24",
+      "description": "node:24 breaks better-sqlite3 v9 native compilation"
+    },
+    {
       "matchUpdateTypes": [
         "minor",
         "patch"
