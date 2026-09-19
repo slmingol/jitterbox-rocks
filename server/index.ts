@@ -55,10 +55,30 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 const startServer = async () => {
   try {
     app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
-      console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`💾 Database: SQLite (music-trivia.db)`);
-      
+      const expressVersion = (() => {
+        try {
+          return JSON.parse(fs.readFileSync(require.resolve('express/package.json'), 'utf8')).version;
+        } catch { return 'unknown'; }
+      })();
+      const env = process.env.NODE_ENV || 'development';
+      const lines = [
+        `  🎸  jitterbox-rocks  v${VERSION}`,
+        ``,
+        `  Node     ${process.version}`,
+        `  Express  v${expressVersion}`,
+        `  Env      ${env}`,
+        `  Port     ${PORT}`,
+        `  DB       SQLite (music-trivia.db)`,
+      ];
+      const width = Math.max(...lines.map(l => l.replace(/\x1b\[[0-9;]*m/g, '').length)) + 2;
+      const hr = '═'.repeat(width);
+      console.log(`\n╔${hr}╗`);
+      for (const line of lines) {
+        const pad = width - line.length;
+        console.log(`║${line}${' '.repeat(pad)}║`);
+      }
+      console.log(`╚${hr}╝\n`);
+
       // Start the daily game scheduler
       dailyGameScheduler.start();
     });
