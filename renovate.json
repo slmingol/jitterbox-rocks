@@ -12,6 +12,14 @@
       "description": "date-fns v4 is ESM-only, incompatible with react-scripts (CRA)"
     },
     {
+      "matchPackageNames": [
+        "better-sqlite3",
+        "@types/better-sqlite3"
+      ],
+      "allowedVersions": "<10.0.0",
+      "description": "better-sqlite3 v10+ crashes on node:18-alpine (native module segfault)"
+    },
+    {
       "matchUpdateTypes": [
         "minor",
         "patch"
