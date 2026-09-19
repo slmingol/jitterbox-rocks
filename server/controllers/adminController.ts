@@ -410,10 +410,20 @@ export class AdminController {
       res.setHeader('Content-Length', stats.size);
 
       const fileStream = fs.createReadStream(dbPath);
+      fileStream.on('error', (streamError) => {
+        console.error('Error streaming database:', streamError);
+        if (!res.headersSent) {
+          res.status(500).json({ message: 'Error exporting database' });
+        } else {
+          res.destroy();
+        }
+      });
       fileStream.pipe(res);
     } catch (error) {
       console.error('Error exporting database:', error);
-      res.status(500).json({ message: 'Error exporting database' });
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Error exporting database' });
+      }
     }
   }
 
