@@ -44,9 +44,9 @@ export class GameController {
    */
   async getGame(req: Request, res: Response) {
     try {
-      const { gameId } = req.params;
+      const gameId = req.params.gameId as string;
       const game = await gameService.getGameById(gameId);
-      
+
       if (!game) {
         return res.status(404).json({ message: 'Game not found' });
       }
@@ -144,7 +144,7 @@ export class GameController {
    */
   async updateGame(req: Request, res: Response) {
     try {
-      const { gameId } = req.params;
+      const gameId = req.params.gameId as string;
       const updates = req.body;
 
       const game = await gameService.updateGame(gameId, updates);
@@ -166,7 +166,7 @@ export class GameController {
    */
   async deleteGame(req: Request, res: Response) {
     try {
-      const { gameId } = req.params;
+      const gameId = req.params.gameId as string;
       const deleted = await gameService.deleteGame(gameId);
       
       if (!deleted) {
@@ -186,7 +186,7 @@ export class GameController {
    */
   async checkAnswer(req: Request, res: Response) {
     try {
-      const { gameId } = req.params;
+      const gameId = req.params.gameId as string;
       const { questionIndex, userAnswer } = req.body;
 
       const game = await gameService.getGameById(gameId);

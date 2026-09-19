@@ -376,7 +376,7 @@ export class AdminController {
    */
   async deleteGamesByTheme(req: Request, res: Response) {
     try {
-      const { theme } = req.params;
+      const theme = req.params.theme as string;
 
       const deleted = GameRepository.deleteByTheme(theme as any);
 

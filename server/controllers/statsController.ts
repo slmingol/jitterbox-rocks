@@ -9,7 +9,7 @@ export class StatsController {
    */
   async getUserStats(req: Request, res: Response) {
     try {
-      const { userId } = req.params;
+      const userId = req.params.userId as string;
       const username = req.query.username as string || userId;
       
       const stats = await statsService.getUserStats(userId, username);
@@ -26,8 +26,8 @@ export class StatsController {
    */
   async getDetailedStats(req: Request, res: Response) {
     try {
-      const { userId } = req.params;
-      
+      const userId = req.params.userId as string;
+
       const stats = await statsService.getDetailedStats(userId);
       
       if (!stats) {
@@ -150,7 +150,7 @@ export class StatsController {
    */
   async getUserRank(req: Request, res: Response) {
     try {
-      const { userId } = req.params;
+      const userId = req.params.userId as string;
       const rank = await statsService.getUserRank(userId);
       res.json({ rank });
     } catch (error) {
