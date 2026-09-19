@@ -20,6 +20,13 @@
       "description": "better-sqlite3 v10+ crashes on node:18-alpine (native module segfault)"
     },
     {
+      "matchPackageNames": [
+        "@types/uuid"
+      ],
+      "enabled": false,
+      "description": "uuid v9 bundles its own types; @types/uuid v11 is an empty stub that breaks compilation"
+    },
+    {
       "matchUpdateTypes": [
         "minor",
         "patch"
