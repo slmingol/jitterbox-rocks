@@ -14,7 +14,7 @@ if (!fs.existsSync(dbDir)) {
 let dbInstance: Database.Database;
 
 const createDatabaseConnection = () => {
-  return new Database(dbPath, { verbose: console.log });
+  return new Database(dbPath);
 };
 
 dbInstance = createDatabaseConnection();
