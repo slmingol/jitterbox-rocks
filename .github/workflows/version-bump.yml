@@ -87,8 +87,12 @@ jobs:
       - name: Create and push tag
         run: |
           NEW_VERSION=${{ steps.version.outputs.new_version }}
-          git tag -a "${NEW_VERSION}" -m "Release ${NEW_VERSION}"
-          git push origin main --tags
+          if git rev-parse "${NEW_VERSION}" >/dev/null 2>&1; then
+            echo "Tag ${NEW_VERSION} already exists, skipping"
+          else
+            git tag -a "${NEW_VERSION}" -m "Release ${NEW_VERSION}"
+            git push origin main --tags
+          fi
       
       - name: Summary
         run: |
