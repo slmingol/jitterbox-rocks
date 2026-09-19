@@ -5,9 +5,18 @@
   ],
   "packageRules": [
     {
-      "matchPackageNames": ["date-fns"],
+      "matchPackageNames": [
+        "date-fns"
+      ],
       "allowedVersions": "<4.0.0",
       "description": "date-fns v4 is ESM-only, incompatible with react-scripts (CRA)"
+    },
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true
     }
   ]
 }
