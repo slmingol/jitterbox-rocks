@@ -33,8 +33,15 @@
     },
     {
       "matchPackageNames": ["typescript"],
+      "matchFileNames": ["client/package.json"],
+      "allowedVersions": "<5.0.0",
+      "description": "react-scripts@5 peer dep caps typescript at ^3||^4"
+    },
+    {
+      "matchPackageNames": ["typescript"],
+      "matchFileNames": ["package.json"],
       "allowedVersions": "<6.0.0",
-      "description": "typescript v6+ breaks CI"
+      "description": "typescript v6+ breaks server CI"
     },
     {
       "matchDepNames": ["node"],
