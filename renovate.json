@@ -33,8 +33,8 @@
     },
     {
       "matchPackageNames": ["typescript"],
-      "allowedVersions": "<7.0.0",
-      "description": "typescript v7 breaks CI"
+      "allowedVersions": "<6.0.0",
+      "description": "typescript v6+ breaks CI"
     },
     {
       "matchDepNames": ["node"],
